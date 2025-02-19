@@ -17,8 +17,9 @@ public class CodeCoverage {
 
 
     public static enum CoverageType {
-        CLASS,
-        TOTAL
+        CLASS, //Just an overall coverage for the class
+        TOTAL, //Total coverage for the project
+        PER_CHANGED_LINE, //Coverage difference per changed line for the class //TODO: this could probably be split up in total and per class
     }
 
     private CoverageType coverageType;

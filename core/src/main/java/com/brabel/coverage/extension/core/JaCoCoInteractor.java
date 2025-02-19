@@ -10,12 +10,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class JaCoCoInteractor {
 
-
+    //TODO: move common code to constructor
     public static CodeCoverage getTotalCodeCoverage(File jacocoExecFile, File classPathDirectory) throws IOException {
         try {
             CoverageBuilder coverageBuilder = new CoverageBuilder();
@@ -52,9 +53,20 @@ public class JaCoCoInteractor {
     }
 
     //TODO: we will need to fix how it gets the source dir etc, since that will depend on the module settings as passed to maven
+
+    /**
+     * Gets the overall code coverage for the changed files
+     *
+     * @param jacocoExecFile the Jacoco.exec file
+     * @param classPathDirectory the class path directory
+     * @param changedFiles the changed files. Thise can be retrieved using the {@link GitInteractor#getOverviewOfChangedFiles(String)} method
+     * @return a map containing the code coverage for each changed file. The key is the file path and the value is the code coverage object (see {@link CodeCoverage})
+     * @throws IOException
+     */
     public static HashMap<String, CodeCoverage> getOverallCodeCoverageForChangedFiles(File jacocoExecFile, File classPathDirectory, Set<File> changedFiles) throws IOException {
         try {
             CoverageBuilder coverageBuilder = new CoverageBuilder();
+
             analyzeClassesDirectory(jacocoExecFile, coverageBuilder, classPathDirectory);
 
             HashMap<String, CodeCoverage> codeCoveragePerFile = new HashMap<>(changedFiles.size());
@@ -107,6 +119,101 @@ public class JaCoCoInteractor {
         } catch (IOException e) {
             throw new IOException("Unable to read " + jacocoExecFile.getAbsolutePath() + ". Exception: " + e);
         }
+    }
+
+    public static HashMap<String, CodeCoverage> getCodeCoverageForChangedLinesOfChangedFiles(File jacocoExecFile, File classPathDirectory, Set<File> changedFiles, HashMap<String, int[]> changedLinesOverview) throws IOException {
+        try {
+            CoverageBuilder coverageBuilder = new CoverageBuilder();
+
+            analyzeClassesDirectory(jacocoExecFile, coverageBuilder, classPathDirectory);
+
+            HashMap<String, CodeCoverage> codeCoveragePerFile = new HashMap<>(changedFiles.size());
+
+            String modulePath = extractModulePath(classPathDirectory);
+
+
+            if (modulePath == null) {
+                throw new IOException("Invalid class path directory; 'target' not found: " + classPathDirectory.getAbsolutePath());
+            }
+
+            String moduleDir = modulePath.split("src/main/java")[0] + "src/main/java";
+
+            FileUtil.Filters filters = new FileUtil.Filters();
+            filters.addPathIncludeFilter(modulePath);
+
+            Set<File> sourceFilesOfModule = new FileUtil().filterFiles(changedFiles, filters);
+
+            Set<String> classFilesOfModule = sourceFilesOfModule.stream()
+                    .map(file -> file.getPath().replace(".java", ""))
+                    .collect(Collectors.toSet());
+
+
+            // Collect coverage data
+            for (IClassCoverage classCoverage : coverageBuilder.getClasses()) {
+
+                boolean found = classFilesOfModule.stream().anyMatch(filePath -> filePath.contains(classCoverage.getName()));
+
+                if (found) {
+                    int[] changedLinesOfFile = getLinesForPath(classCoverage.getName(), changedLinesOverview);
+
+                    int totalLinesThatAreCovered = 0;
+                    int totalLinesThatAreNotCovered = 0;
+
+                    for(int i=0;i<changedLinesOfFile.length;i++){
+                        ILine line = classCoverage.getLine(changedLinesOfFile[i]);
+                        int status = line.getStatus();
+
+                        if ((status & ICounter.NOT_COVERED) != 0) {
+                            totalLinesThatAreNotCovered++;
+                        } else if ((status & ICounter.FULLY_COVERED) != 0) {
+                            totalLinesThatAreCovered++;
+                        } else if ((status & ICounter.PARTLY_COVERED) != 0) {
+                            //TODO: for now we will treat this as not covered.
+                            //      In the future this can probably come from a configuration by the end-user.
+                            totalLinesThatAreNotCovered++;
+                        }
+                        //TODO: leaving commented for now, in the future, we might want to generate a nice overview
+                        //      per class file. We could than use the status to generate a nice overview. Unknown means that this is
+                        //      probably a line that is not code. Can be comment, whitespace etc.
+                        /*else {
+                            //skip
+                            System.out.println("Line " + changedLinesOfFile[i]+ " has unknown coverage status.");
+                        }*/
+                    }
+
+
+
+                    // Adjust to get the full file path within the module
+                    File sourceFile = new File(moduleDir + "/"+ classCoverage.getName() + ".java");
+                    if (sourceFile != null) {
+                        String filePath = sourceFile.getPath();
+                        CodeCoverage codeCoverageForFile = new CodeCoverage(filePath, CodeCoverage.CoverageType.PER_CHANGED_LINE, -1, -1, totalLinesThatAreNotCovered, totalLinesThatAreCovered);
+
+                        codeCoveragePerFile.put(filePath, codeCoverageForFile);
+                    }
+                }
+            }
+
+            return codeCoveragePerFile;
+        } catch (IOException e) {
+            throw new IOException("Unable to read " + jacocoExecFile.getAbsolutePath() + ". Exception: " + e);
+        }
+    }
+
+    /**
+     * Utility method to get the integer array for a specific file from the changed lines overview
+     * @param path the path of the file
+     * @param changedLinesOverview the changed lines overview
+     * @return the integer array for the file
+     */
+    protected static int[] getLinesForPath(String path, HashMap<String, int[]> changedLinesOverview) {
+        for (Map.Entry<String, int[]> entry : changedLinesOverview.entrySet()) {
+            String key = entry.getKey();
+            if (key.contains(path)) {
+                return entry.getValue();
+            }
+        }
+        return null;
     }
 
 
