@@ -94,6 +94,11 @@ public class JaCoCoInteractorTest {
 
     //single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass
 
+    /**
+     * This method returns a map with the changed lines for each file
+     * Includes all the lines in the Jacoco overview
+     * @return
+     */
     private HashMap<String, int[]> getChangedLinesOverview(){
         HashMap<String, int[]> changedLinesOverview = new HashMap<>();
 
@@ -117,8 +122,11 @@ public class JaCoCoInteractorTest {
         Assertions.assertArrayEquals(expectedLines2, linesForPath2);
     }
 
+    /**
+     * In this case the changed lines overview includes all the lines in the Jacoco overview so Jacoco = changed lines
+     */
     @Test
-    public void testCodeCoverageChangedFilesPerChangedLinesLine(){
+    public void testCodeCoverageChangedFilesPerChangedLinesLineAllLines(){
         HashSet<File> sampleChangedFiles = getSampleChangedFiles();
         HashMap<String, int[]> changedLiensOverview = getChangedLinesOverview();
 
@@ -153,6 +161,62 @@ public class JaCoCoInteractorTest {
         Assertions.assertEquals(-1, secondFile.getInstructionsCovered());
         Assertions.assertEquals(3, secondFile.getLinesMissed());
         Assertions.assertEquals(2, secondFile.getLinesCovered());
+        Assertions.assertEquals(CodeCoverage.CoverageType.PER_CHANGED_LINE, secondFile.getCoverageType());
+    }
+
+    /**
+     *
+     * @return a changed line overview, except that we removed some of the changed lines versus the previous example that included all the lines tracked by Jacoco and git
+     */
+    private HashMap<String, int[]> getChangedLinesOverviewNotAll(){
+        HashMap<String, int[]> changedLinesOverview = new HashMap<>();
+
+        changedLinesOverview.put("diff --git a/single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java b/single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java", new int[]{4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34});
+        changedLinesOverview.put("diff --git a/single-module-example/src/test/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClassTest.java b/single-module-example/src/test/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClassTest.java",  new int[]{4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18});
+
+        //should not be included in the result
+        changedLinesOverview.put("diff --git a/core/pom.xml b/core/pom.xml", new int[]{-2, -2});
+
+        return changedLinesOverview;
+    }
+
+    /**
+     * Here we filtered some lines, just to verify that these are not part of the code coverage overview
+     */
+    @Test
+    public void testCodeCoverageChangedFilesPerChangedLinesLineSelectedLines(){
+        HashSet<File> sampleChangedFiles = getSampleChangedFiles();
+
+        FileUtil.Filters filters = new FileUtil.Filters();
+        filters.addPathIncludeFilter("single-module-example/src/main/java");
+
+        Set<File> result = new FileUtil().filterFiles(getSampleChangedFiles(), filters);
+
+        HashMap<String, CodeCoverage> codeCoveragePerChangedFile;
+        try {
+            codeCoveragePerChangedFile = getCodeCoverageForChangedLinesOfChangedFiles(singleModuleFile, new File("../single-module-example/target/classes/com"), result, getChangedLinesOverviewNotAll());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Assertions.assertEquals(2, codeCoveragePerChangedFile.size());
+
+
+        CodeCoverage firstFile = codeCoveragePerChangedFile.get("single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java");
+        Assertions.assertNotNull(firstFile);
+        Assertions.assertEquals(-1, firstFile.getInstructionsMissed());
+        Assertions.assertEquals(-1, firstFile.getInstructionsCovered());
+        Assertions.assertEquals(0, firstFile.getLinesMissed());
+        Assertions.assertEquals(1, firstFile.getLinesCovered());
+        Assertions.assertEquals(CodeCoverage.CoverageType.PER_CHANGED_LINE, firstFile.getCoverageType());
+
+        CodeCoverage secondFile = codeCoveragePerChangedFile.get("single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java");
+        Assertions.assertNotNull(secondFile);
+
+        Assertions.assertEquals(-1, secondFile.getInstructionsMissed());
+        Assertions.assertEquals(-1, secondFile.getInstructionsCovered());
+        Assertions.assertEquals(2, secondFile.getLinesMissed());
+        Assertions.assertEquals(1, secondFile.getLinesCovered());
         Assertions.assertEquals(CodeCoverage.CoverageType.PER_CHANGED_LINE, secondFile.getCoverageType());
     }
 
