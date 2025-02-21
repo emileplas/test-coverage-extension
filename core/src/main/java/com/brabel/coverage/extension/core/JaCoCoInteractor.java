@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 public class JaCoCoInteractor {
 
     //TODO: move common code to constructor
+    //TODO: tests that use the source directory will probably need a String parameter to pass the source directory. This can differ per project. We can use src/main/java as a default?
+    //TODO: class path directory will probably also need to be set by the user. We can use target/classes as a default?
 
     /**
      * Gets the total code coverage for the project
