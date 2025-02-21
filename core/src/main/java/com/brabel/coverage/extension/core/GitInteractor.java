@@ -11,15 +11,15 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Utility class to interact with git
+ */
 public class GitInteractor {
 
     public static Set<File> getOverviewOfChangedFiles(String nameOfBranchToCompare) throws RuntimeException {
         Set<File> changedFiles = new HashSet<>();
 
         try {
-            //String currentBranch = executeGitCommand("rev-parse --abbrev-ref HEAD");
-
-            //String baseBranch = nameOfBranchToCompare;
             ProcessBuilder processBuilder = new ProcessBuilder();
             processBuilder.command("git", "diff", "--name-status", nameOfBranchToCompare);
 
@@ -57,29 +57,13 @@ public class GitInteractor {
         return changedFiles;
     }
 
-    //TODO: implement
-    private static String getBaseBranch(String currentBranch) {
-        throw new RuntimeException("Not implemented");
-    }
-
-    private static String executeGitCommand(String command) throws IOException, InterruptedException {
-        ProcessBuilder processBuilder = new ProcessBuilder("git", command);
-        processBuilder.redirectErrorStream(true);
-        Process process = processBuilder.start();
-
-        StringBuilder output = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                output.append(line).append("\n");
-            }
-        }
-
-        process.waitFor(); // Wait for the process to finish
-        return output.toString().trim(); // Return the output as a string
-    }
-
-
+    /**
+     * Returns an overview of the changed lines per file in the current branch compared to the branchToCompare
+     * @param branchToCompare the branch to compare the current branch to
+     * @return a map with the file as key and an array of changed lines as value. These line numbers need to match with the line numbers that Jacoco uses
+     * @throws IOException if the git command fails
+     * @throws InterruptedException if the git command fails
+     */
     public static HashMap<String, int[]> getChangedLines(String branchToCompare) throws IOException, InterruptedException {
         // Prepare the git diff command to get detailed changes
         ProcessBuilder processBuilder = new ProcessBuilder();
@@ -99,8 +83,6 @@ public class GitInteractor {
             int lineIndex = -2;
             String file = null;
             while ((line = reader.readLine()) != null) {
-
-                System.out.println(line);
 
                 if(isLineDiffGitLine(line)){
                     file = line;
@@ -132,16 +114,13 @@ public class GitInteractor {
                         lines.add(lineIndex);
                     }
                 }
-
-
-                //System.out.println(line); // Output the detailed changes
             }
         }
 
         // Wait for the process to complete
         int exitCode = process.waitFor();
         if (exitCode != 0) {
-            System.err.println("Error executing git command: " + exitCode);
+            throw new RuntimeException("Error executing git command: " + exitCode);
         }
 
         return changedLinesPerFile;
@@ -151,6 +130,11 @@ public class GitInteractor {
 
     private static final Pattern PATTERN = Pattern.compile(REGEX);
 
+    /**
+     * Check if a line is a git diff line in the format of "diff --git a/... b/..."
+     * @param line the line to check
+     * @return true if the line is a git diff line, false otherwise
+     */
     protected static boolean isLineDiffGitLine(String line){
         Matcher matcher = PATTERN.matcher(line);
         return matcher.matches();
