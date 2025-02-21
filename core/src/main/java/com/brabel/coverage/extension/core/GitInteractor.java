@@ -16,6 +16,12 @@ import java.util.regex.Pattern;
  */
 public class GitInteractor {
 
+    /**
+     * Get an overview of the changed files in the current branch compared to the branchToCompare
+     * @param nameOfBranchToCompare the branch to compare the current branch to
+     * @return a set of files that have changed
+     * @throws RuntimeException
+     */
     public static Set<File> getOverviewOfChangedFiles(String nameOfBranchToCompare) throws RuntimeException {
         Set<File> changedFiles = new HashSet<>();
 
