@@ -20,6 +20,14 @@ import java.util.stream.Collectors;
 public class JaCoCoInteractor {
 
     //TODO: move common code to constructor
+
+    /**
+     * Gets the total code coverage for the project
+     * @param jacocoExecFile the Jacoco.exec file
+     * @param classPathDirectory the class path directory. This is the directory where the compiled classes are located. This is usually the 'target/classes' directory
+     * @return the total code coverage for the project
+     * @throws IOException if the Jacoco.exec file cannot be read
+     */
     public static CodeCoverage getTotalCodeCoverage(File jacocoExecFile, File classPathDirectory) throws IOException {
         try {
             CoverageBuilder coverageBuilder = new CoverageBuilder();
@@ -37,7 +45,7 @@ public class JaCoCoInteractor {
      * @param classPathDirectory the class path directory where the compiled classes are stored. This is usually the 'target/classes' directory
      * @return the path to the source code directory
      */
-    public static String extractModuleSourceCodePathPath(File classPathDirectory) {
+    private static String extractModuleSourceCodePathPath(File classPathDirectory) {
         Path path = classPathDirectory.toPath().normalize();
         String pathToString = path.toString();
 
