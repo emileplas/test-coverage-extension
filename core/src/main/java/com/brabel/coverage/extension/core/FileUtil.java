@@ -8,9 +8,13 @@ import java.util.function.Predicate;
 public class FileUtil {
 
     public static class Filters {
+
         private Set<Predicate<File>> fileFilters = new HashSet<>();
 
-        // Method to add an include path filter
+        /**
+         * Add a path filter to include files that are in a specific path
+         * @param includePath The path to include
+         */
         public void addPathIncludeFilter(String includePath) {
             if (includePath != null) {
                 fileFilters.add(file ->
@@ -20,7 +24,10 @@ public class FileUtil {
             }
         }
 
-        // Method to add an exclude path filter
+        /**
+         * Add a path filter to exclude files that are in a specific path
+         * @param excludePath The path to exclude
+         */
         public void addPathExcludeFilter(String excludePath) {
             if (excludePath != null) {
                 fileFilters.add(file ->
@@ -30,7 +37,10 @@ public class FileUtil {
             }
         }
 
-        // Method to add an include pattern filter
+        /**
+         * Add a pattern filter to include files that match a specific pattern
+         * @param includePattern The pattern to include
+         */
         public void addPatternIncludeFilter(String includePattern) {
             if (includePattern != null) {
                 fileFilters.add(file ->
@@ -39,7 +49,10 @@ public class FileUtil {
             }
         }
 
-        // Method to add an exclude pattern filter
+        /**
+         * Add a pattern filter to exclude files that match a specific pattern
+         * @param excludePattern The pattern to exclude
+         */
         public void addPatternExcludeFilter(String excludePattern) {
             if (excludePattern != null) {
                 fileFilters.add(file ->
@@ -48,7 +61,10 @@ public class FileUtil {
             }
         }
 
-        // Allows adding custom predicates for extensibility
+        /**
+         * Add a custom filter
+         * @param customFilter
+         */
         public void addCustomFilter(Predicate<File> customFilter) {
             if (customFilter != null) {
                 fileFilters.add(customFilter);
@@ -61,6 +77,12 @@ public class FileUtil {
         }
     }
 
+    /**
+     * Filter a set of files based on a set of filters
+     * @param originalFileSet The original set of files
+     * @param applicableFilters The filters to apply
+     * @return The filtered set of files
+     */
     public Set<File> filterFiles(Set<File> originalFileSet, Filters applicableFilters) {
         Set<File> filteredFiles = new HashSet<>();
 
