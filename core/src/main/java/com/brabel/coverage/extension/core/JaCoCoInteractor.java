@@ -37,7 +37,7 @@ public class JaCoCoInteractor {
     private CoverageBuilder getCoverageBuilder() {
         return coverageBuilder;
     }
-    
+
     //TODO: tests that use the source directory will probably need a String parameter to pass the source directory. This can differ per project. We can use src/main/java as a default?
     //TODO: class path directory will probably also need to be set by the user. We can use target/classes as a default?
 
@@ -82,7 +82,7 @@ public class JaCoCoInteractor {
 
     /**
      * Gets the overall code coverage for the changed files.
-     * This method is more granular than the {@link #getTotalCodeCoverage()} method but less granular than the {@link #getCodeCoverageForChangedLinesOfChangedFiles(File, File, Set, HashMap)} method.
+     * This method is more granular than the {@link #getTotalCodeCoverage()} method but less granular than the {@link #getCodeCoverageForChangedLinesOfChangedFiles(Set, HashMap)} method.
      * This method can be used to target code coverage for changed files and not just for the actual code that was changed in these files.
      * @param changedFiles the changed files. This can be retrieved using the {@link GitInteractor#getOverviewOfChangedFiles(String)} method
      * @return a map containing the code coverage for each changed file. The key is the file path and the value is the code coverage object (see {@link CodeCoverage})
