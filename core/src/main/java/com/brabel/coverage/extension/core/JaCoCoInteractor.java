@@ -19,27 +19,50 @@ import java.util.stream.Collectors;
  */
 public class JaCoCoInteractor {
 
-    //TODO: move common code to constructor
+    private final File jacocoExecFile;
+
+
+    private File getJacocoExecFile() {
+        return jacocoExecFile;
+    }
+
+    private final File classPathDirectory;
+
+    private File getClassPathDirectory() {
+        return classPathDirectory;
+    }
+
+    private CoverageBuilder coverageBuilder;
+
+    private CoverageBuilder getCoverageBuilder() {
+        return coverageBuilder;
+    }
+    
     //TODO: tests that use the source directory will probably need a String parameter to pass the source directory. This can differ per project. We can use src/main/java as a default?
     //TODO: class path directory will probably also need to be set by the user. We can use target/classes as a default?
 
     /**
-     * Gets the total code coverage for the project
+     * Constructor
      * @param jacocoExecFile the Jacoco.exec file
      * @param classPathDirectory the class path directory. This is the directory where the compiled classes are located. This is usually the 'target/classes' directory
+     * @throws IOException if the Jacoco.exec file cannot be read
+     */
+    JaCoCoInteractor(File jacocoExecFile, File classPathDirectory) throws IOException {
+        this.jacocoExecFile = jacocoExecFile;
+        this.classPathDirectory = classPathDirectory;
+        this.coverageBuilder = new CoverageBuilder();
+
+        analyzeClassesDirectory(jacocoExecFile, getCoverageBuilder(), classPathDirectory);
+    }
+
+    /**
+     * Gets the total code coverage for the project
+
      * @return the total code coverage for the project
      * @throws IOException if the Jacoco.exec file cannot be read
      */
-    public static CodeCoverage getTotalCodeCoverage(File jacocoExecFile, File classPathDirectory) throws IOException {
-        try {
-            CoverageBuilder coverageBuilder = new CoverageBuilder();
-
-            analyzeClassesDirectory(jacocoExecFile, coverageBuilder, classPathDirectory);
-
-            return getTotalCoverageData(coverageBuilder);
-        } catch (IOException e) {
-            throw new IOException("Unable to read " + jacocoExecFile.getAbsolutePath() + ". Exception: " + e);
-        }
+    public CodeCoverage getTotalCodeCoverage() throws IOException {
+        return getTotalCoverageData(getCoverageBuilder());
     }
 
     /**
@@ -49,6 +72,7 @@ public class JaCoCoInteractor {
      */
     private static String extractModuleSourceCodePathPath(File classPathDirectory) {
         Path path = classPathDirectory.toPath().normalize();
+
         String pathToString = path.toString();
 
         return pathToString.replace("../", "").replace("target/classes", "src/main/java"); // Return null if "target" is not found
@@ -58,29 +82,23 @@ public class JaCoCoInteractor {
 
     /**
      * Gets the overall code coverage for the changed files.
-     * This method is more granular than the {@link #getTotalCodeCoverage(File, File)} method but less granular than the {@link #getCodeCoverageForChangedLinesOfChangedFiles(File, File, Set, HashMap)} method.
+     * This method is more granular than the {@link #getTotalCodeCoverage()} method but less granular than the {@link #getCodeCoverageForChangedLinesOfChangedFiles(File, File, Set, HashMap)} method.
      * This method can be used to target code coverage for changed files and not just for the actual code that was changed in these files.
-     * @param jacocoExecFile the Jacoco.exec file
-     * @param classPathDirectory the class path directory. This is the directory where the compiled classes are located. This is usually the 'target/classes' directory
      * @param changedFiles the changed files. This can be retrieved using the {@link GitInteractor#getOverviewOfChangedFiles(String)} method
      * @return a map containing the code coverage for each changed file. The key is the file path and the value is the code coverage object (see {@link CodeCoverage})
      * @throws IOException
      */
-    public static HashMap<String, CodeCoverage> getOverallCodeCoverageForChangedFiles(File jacocoExecFile, File classPathDirectory, Set<File> changedFiles) throws IOException {
+    public HashMap<String, CodeCoverage> getOverallCodeCoverageForChangedFiles(Set<File> changedFiles) throws IOException {
         try {
-            //create a code coverage overview with jacoco
-            CoverageBuilder coverageBuilder = new CoverageBuilder();
-
-            analyzeClassesDirectory(jacocoExecFile, coverageBuilder, classPathDirectory);
 
             //create a map to store the code coverage per file
             HashMap<String, CodeCoverage> codeCoveragePerFile = new HashMap<>(changedFiles.size());
 
             //we retrieve the path where the source code is stored, based on the class path directory where the compiled classes are stored
-            String sourceCodePath = extractModuleSourceCodePathPath(classPathDirectory);
+            String sourceCodePath = extractModuleSourceCodePathPath(getClassPathDirectory());
 
             if (sourceCodePath == null) {
-                throw new IOException("Invalid class path directory; 'target' not found: " + classPathDirectory.getAbsolutePath());
+                throw new IOException("Invalid class path directory; 'target' not found: " + getClassPathDirectory().getAbsolutePath());
             }
 
             //we retrieve the source code path of the module directory. Was this important for multi module projects?
@@ -100,7 +118,7 @@ public class JaCoCoInteractor {
 
 
             // Collect coverage data
-            for (IClassCoverage classCoverage : coverageBuilder.getClasses()) {
+            for (IClassCoverage classCoverage : getCoverageBuilder().getClasses()) {
 
                 //if the class coverage of the jacoco report is found in the source files of the module
                 boolean found = sourceFilesOfModulePathToStringWithoutJavaExtension.stream().anyMatch(filePath -> filePath.contains(classCoverage.getName()));
@@ -128,7 +146,7 @@ public class JaCoCoInteractor {
 
             return codeCoveragePerFile;
         } catch (IOException e) {
-            throw new IOException("Unable to read " + jacocoExecFile.getAbsolutePath() + ". Exception: " + e);
+            throw new IOException("Unable to read " + getJacocoExecFile().getAbsolutePath() + ". Exception: " + e);
         }
     }
 
@@ -137,27 +155,21 @@ public class JaCoCoInteractor {
      * So if a file has 10 lines and 5 of those lines were changed, this method will return the coverage for those 5 lines.
      * The coverage will return a {@link CodeCoverage} object with the {@link CodeCoverage.CoverageType} set to {@link CodeCoverage.CoverageType#PER_CHANGED_LINE}
      * It is important (!) to notice that this method will set the instructionsMissed and instructionsCovered of {@link CodeCoverage#} to -1. This method only focuses on the lines covered.
-     * This code coverage overview is more granular than the {@link #getOverallCodeCoverageForChangedFiles(File, File, Set)} method.
-     * @param jacocoExecFile the Jacoco.exec file
-     * @param classPathDirectory the class path directory
+     * This code coverage overview is more granular than the {@link #getOverallCodeCoverageForChangedFiles(Set)} method.
      * @param changedFiles the changed files. Thise can be retrieved using the {@link GitInteractor#getOverviewOfChangedFiles(String)} method
      * @param changedLinesOverview the changed lines overview. This can be retrieved using the {@link GitInteractor#getChangedLines(String)} method
      * @return a map containing the code coverage for each changed file. The key is the file path and the value is the code coverage object (see {@link CodeCoverage})
      * @throws IOException if the Jacoco.exec file cannot be read
      */
-    public static HashMap<String, CodeCoverage> getCodeCoverageForChangedLinesOfChangedFiles(File jacocoExecFile, File classPathDirectory, Set<File> changedFiles, HashMap<String, int[]> changedLinesOverview) throws IOException {
+    public HashMap<String, CodeCoverage> getCodeCoverageForChangedLinesOfChangedFiles(Set<File> changedFiles, HashMap<String, int[]> changedLinesOverview) throws IOException {
         try {
-            CoverageBuilder coverageBuilder = new CoverageBuilder();
-
-            analyzeClassesDirectory(jacocoExecFile, coverageBuilder, classPathDirectory);
-
             HashMap<String, CodeCoverage> codeCoveragePerFile = new HashMap<>(changedFiles.size());
 
-            String modulePath = extractModuleSourceCodePathPath(classPathDirectory);
+            String modulePath = extractModuleSourceCodePathPath(getClassPathDirectory());
 
 
             if (modulePath == null) {
-                throw new IOException("Invalid class path directory; 'target' not found: " + classPathDirectory.getAbsolutePath());
+                throw new IOException("Invalid class path directory; 'target' not found: " + getClassPathDirectory().getAbsolutePath());
             }
 
             String moduleDir = modulePath.split("src/main/java")[0] + "src/main/java";
@@ -173,7 +185,7 @@ public class JaCoCoInteractor {
 
 
             // Collect coverage data
-            for (IClassCoverage classCoverage : coverageBuilder.getClasses()) {
+            for (IClassCoverage classCoverage : getCoverageBuilder().getClasses()) {
 
                 boolean found = classFilesOfModule.stream().anyMatch(filePath -> filePath.contains(classCoverage.getName()));
 
@@ -220,7 +232,7 @@ public class JaCoCoInteractor {
 
             return codeCoveragePerFile;
         } catch (IOException e) {
-            throw new IOException("Unable to read " + jacocoExecFile.getAbsolutePath() + ". Exception: " + e);
+            throw new IOException("Unable to read " + getJacocoExecFile().getAbsolutePath() + ". Exception: " + e);
         }
     }
 
@@ -294,4 +306,5 @@ public class JaCoCoInteractor {
 
         return executionData;
     }
+
 }
