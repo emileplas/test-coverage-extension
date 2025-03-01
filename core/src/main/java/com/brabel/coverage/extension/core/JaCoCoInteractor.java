@@ -8,11 +8,9 @@ import org.jacoco.core.data.SessionInfoStore;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Utility class to interact with JaCoCo
@@ -48,9 +46,6 @@ public class JaCoCoInteractor {
         return baseDir;
     }
 
-    //TODO: tests that use the source directory will probably need a String parameter to pass the source directory. This can differ per project. We can use src/main/java as a default?
-    //TODO: class path directory will probably also need to be set by the user. We can use target/classes as a default?
-
     /**
      * Constructor
      * @param jacocoExecFile the Jacoco.exec file
@@ -60,12 +55,14 @@ public class JaCoCoInteractor {
      * @param baseDir the base directory of the project. In maven this comes from project.getBasedir()
      * @throws IOException if the Jacoco.exec file cannot be read
      */
-    public JaCoCoInteractor(File jacocoExecFile, File classPathDirectory, String[] sourceCodePaths, File baseDir) throws IOException {
+    public JaCoCoInteractor(File jacocoExecFile, String classPathDirectory, String[] sourceCodePaths, File baseDir) throws IOException {
         this.coverageBuilder = new CoverageBuilder();
         this.sourceCodePaths = sourceCodePaths;
         this.baseDir = baseDir;
 
-        analyzeClassesDirectory(jacocoExecFile, getCoverageBuilder(), classPathDirectory);
+        File classPathDir = new File(baseDir, classPathDirectory);
+
+        analyzeClassesDirectory(jacocoExecFile, getCoverageBuilder(), classPathDir);
     }
 
     /**
