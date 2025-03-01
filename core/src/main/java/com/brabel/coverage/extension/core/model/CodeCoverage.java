@@ -1,4 +1,4 @@
-package com.brabel.coverage.extension.core;
+package com.brabel.coverage.extension.core.model;
 
 /**
  * Represents the code coverage of a file/class
