@@ -57,6 +57,23 @@ public class JaCoCoInteractor {
      * @throws IOException if the Jacoco.exec file cannot be read
      */
     public JaCoCoInteractor(File jacocoExecFile, String classPathDirectory, String[] sourceCodePaths, File baseDir) throws IOException {
+        if(jacocoExecFile == null){
+            throw new IllegalArgumentException("The Jacoco.exec file cannot be null.");
+        }
+
+        if(classPathDirectory == null){
+            throw new IllegalArgumentException("The class path directory cannot be null.");
+        }
+
+        if(sourceCodePaths == null){
+            throw new IllegalArgumentException("The source code paths cannot be null.");
+        }
+
+        if(baseDir == null){
+            throw new IllegalArgumentException("The base directory cannot be null.");
+        }
+
+
         this.coverageBuilder = new CoverageBuilder();
         this.sourceCodePaths = sourceCodePaths;
         this.baseDir = baseDir;
