@@ -1,4 +1,4 @@
-package com.brabel.coverage.extension.core;
+package com.brabel.coverage.extension.core.integration;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -1,5 +1,7 @@
-package com.brabel.coverage.extension.core;
+package com.brabel.coverage.extension.core.integration;
 
+import com.brabel.coverage.extension.core.FileUtil;
+import com.brabel.coverage.extension.core.model.CodeCoverage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.brabel.coverage.extension.core.JaCoCoInteractor.*;
+import static com.brabel.coverage.extension.core.integration.JaCoCoInteractor.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 

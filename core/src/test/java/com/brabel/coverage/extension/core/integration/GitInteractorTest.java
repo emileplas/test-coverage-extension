@@ -1,4 +1,4 @@
-package com.brabel.coverage.extension.core;
+package com.brabel.coverage.extension.core.integration;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
-import static com.brabel.coverage.extension.core.GitInteractor.*;
+import static com.brabel.coverage.extension.core.integration.GitInteractor.*;
 
 public class GitInteractorTest {
 

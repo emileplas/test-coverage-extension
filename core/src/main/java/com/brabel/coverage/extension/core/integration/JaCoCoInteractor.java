@@ -1,5 +1,6 @@
-package com.brabel.coverage.extension.core;
+package com.brabel.coverage.extension.core.integration;
 
+import com.brabel.coverage.extension.core.model.CodeCoverage;
 import org.jacoco.core.analysis.*;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.ExecutionDataStore;
