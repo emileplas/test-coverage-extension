@@ -1,4 +1,4 @@
-package com.brabel.coverage.extension.core;
+package com.brabel.coverage.extension.core.util;
 
 import java.io.File;
 import java.util.HashSet;

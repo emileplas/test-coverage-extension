@@ -1,6 +1,6 @@
 package com.brabel.coverage.extension.core.integration;
 
-import com.brabel.coverage.extension.core.FileUtil;
+import com.brabel.coverage.extension.core.util.FileUtil;
 import com.brabel.coverage.extension.core.model.CodeCoverage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

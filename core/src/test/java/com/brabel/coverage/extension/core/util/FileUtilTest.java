@@ -1,6 +1,5 @@
-package com.brabel.coverage.extension.core;
+package com.brabel.coverage.extension.core.util;
 
-import com.brabel.coverage.extension.core.FileUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
