@@ -34,6 +34,8 @@ public class Rule {
     }
 
     private final RuleType ruleType;
+
+
     private final double minimumCoverage;
 
     /**
