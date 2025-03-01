@@ -23,7 +23,7 @@ public class JaCoCoInteractorTest {
         CodeCoverage expectedCodeCoverage = new CodeCoverage(null, CodeCoverage.CoverageType.TOTAL, 21, 51,  5, 10);
 
         try {
-            JaCoCoInteractor jaCoCoInteractor = new JaCoCoInteractor(singleModuleFile, new File("../single-module-example/target/classes/com"));
+            JaCoCoInteractor jaCoCoInteractor = new JaCoCoInteractor(singleModuleFile, new File("../single-module-example/target/classes"), new String[]{"src/main/java"}, new File("../single-module-example/"));
             CodeCoverage actualCodeCoverage = jaCoCoInteractor.getTotalCodeCoverage();
 
             assertEquals(expectedCodeCoverage.getCoverageType(), actualCodeCoverage.getCoverageType());
@@ -67,7 +67,7 @@ public class JaCoCoInteractorTest {
 
         HashMap<String, CodeCoverage> codeCoveragePerChangedFile;
         try {
-            JaCoCoInteractor jaCoCoInteractor = new JaCoCoInteractor(singleModuleFile, new File("../single-module-example/target/classes/com"));
+            JaCoCoInteractor jaCoCoInteractor = new JaCoCoInteractor(singleModuleFile, new File("../single-module-example/target/classes/com"), new String[]{"src/main/java"}, new File("../single-module-example/"));
             codeCoveragePerChangedFile = jaCoCoInteractor.getOverallCodeCoverageForChangedFiles(result);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -76,7 +76,7 @@ public class JaCoCoInteractorTest {
         Assertions.assertEquals(2, codeCoveragePerChangedFile.size());
 
 
-        CodeCoverage firstFile = codeCoveragePerChangedFile.get("single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java");
+        CodeCoverage firstFile = codeCoveragePerChangedFile.get("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java");
         Assertions.assertNotNull(firstFile);
         Assertions.assertEquals(13, firstFile.getInstructionsMissed());
         Assertions.assertEquals(30, firstFile.getInstructionsCovered());
@@ -84,7 +84,7 @@ public class JaCoCoInteractorTest {
         Assertions.assertEquals(7, firstFile.getLinesCovered());
         Assertions.assertEquals(CodeCoverage.CoverageType.CLASS, firstFile.getCoverageType());
 
-        CodeCoverage secondFile = codeCoveragePerChangedFile.get("single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java");
+        CodeCoverage secondFile = codeCoveragePerChangedFile.get("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java");
         Assertions.assertNotNull(secondFile);
 
         Assertions.assertEquals(8, secondFile.getInstructionsMissed());
@@ -140,7 +140,7 @@ public class JaCoCoInteractorTest {
 
         HashMap<String, CodeCoverage> codeCoveragePerChangedFile;
         try {
-            JaCoCoInteractor jaCoCoInteractor = new JaCoCoInteractor(singleModuleFile, new File("../single-module-example/target/classes/com"));
+            JaCoCoInteractor jaCoCoInteractor = new JaCoCoInteractor(singleModuleFile, new File("../single-module-example/target/classes/com"), new String[]{"src/main/java"}, new File("../single-module-example/"));
             codeCoveragePerChangedFile = jaCoCoInteractor.getCodeCoverageForChangedLinesOfChangedFiles(result, changedLiensOverview);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -149,7 +149,7 @@ public class JaCoCoInteractorTest {
         Assertions.assertEquals(2, codeCoveragePerChangedFile.size());
 
 
-        CodeCoverage firstFile = codeCoveragePerChangedFile.get("single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java");
+        CodeCoverage firstFile = codeCoveragePerChangedFile.get("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java");
         Assertions.assertNotNull(firstFile);
         Assertions.assertEquals(-1, firstFile.getInstructionsMissed());
         Assertions.assertEquals(-1, firstFile.getInstructionsCovered());
@@ -157,7 +157,7 @@ public class JaCoCoInteractorTest {
         Assertions.assertEquals(1, firstFile.getLinesCovered());
         Assertions.assertEquals(CodeCoverage.CoverageType.PER_CHANGED_LINE, firstFile.getCoverageType());
 
-        CodeCoverage secondFile = codeCoveragePerChangedFile.get("single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java");
+        CodeCoverage secondFile = codeCoveragePerChangedFile.get("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java");
         Assertions.assertNotNull(secondFile);
 
         Assertions.assertEquals(-1, secondFile.getInstructionsMissed());
@@ -197,7 +197,7 @@ public class JaCoCoInteractorTest {
 
         HashMap<String, CodeCoverage> codeCoveragePerChangedFile;
         try {
-            JaCoCoInteractor jaCoCoInteractor = new JaCoCoInteractor(singleModuleFile, new File("../single-module-example/target/classes/com"));
+            JaCoCoInteractor jaCoCoInteractor = new JaCoCoInteractor(singleModuleFile, new File("../single-module-example/target/classes/com"), new String[]{"src/main/java"}, new File("../single-module-example/"));
             codeCoveragePerChangedFile = jaCoCoInteractor.getCodeCoverageForChangedLinesOfChangedFiles(result, getChangedLinesOverviewNotAll());
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -206,7 +206,7 @@ public class JaCoCoInteractorTest {
         Assertions.assertEquals(2, codeCoveragePerChangedFile.size());
 
 
-        CodeCoverage firstFile = codeCoveragePerChangedFile.get("single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java");
+        CodeCoverage firstFile = codeCoveragePerChangedFile.get("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java");
         Assertions.assertNotNull(firstFile);
         Assertions.assertEquals(-1, firstFile.getInstructionsMissed());
         Assertions.assertEquals(-1, firstFile.getInstructionsCovered());
@@ -214,7 +214,7 @@ public class JaCoCoInteractorTest {
         Assertions.assertEquals(1, firstFile.getLinesCovered());
         Assertions.assertEquals(CodeCoverage.CoverageType.PER_CHANGED_LINE, firstFile.getCoverageType());
 
-        CodeCoverage secondFile = codeCoveragePerChangedFile.get("single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java");
+        CodeCoverage secondFile = codeCoveragePerChangedFile.get("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java");
         Assertions.assertNotNull(secondFile);
 
         Assertions.assertEquals(-1, secondFile.getInstructionsMissed());
