@@ -231,4 +231,51 @@ public class CoverageCheckerTest {
         Assertions.assertEquals(expectedMessage, ruleValidationResult.getMessage());
 
     }
+
+    @Test
+    public void testChangedLinesOverallFail() throws IOException, InterruptedException {
+        RuleManager ruleManager = new RuleManager();
+        Rule classChangedLineRule = new Rule(Rule.RuleType.TOTAL_CHANGED_LINES, 80);
+        ruleManager.addRule(classChangedLineRule);
+
+        CoverageChecker coverageChecker = new CoverageChecker(ruleManager, getConfigurationManager());
+        coverageChecker.setChangedFiles(getSampleChangedFiles());
+        coverageChecker.setChangedLines(getChangedLinesOverview());
+
+        HashMap<Rule, RuleValidationResult> ruleRuleValidationResultHashMap = coverageChecker.runChecks();
+
+        Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
+
+        String expectedMessage = "The overall coverage of the changed lines is below the required percentage. Required: 80.0% Actual: 42,86%";
+
+        RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(classChangedLineRule);
+        Assertions.assertFalse(ruleValidationResult.isSuccessful());
+        Assertions.assertEquals(expectedMessage, ruleValidationResult.getMessage());
+
+    }
+
+
+    @Test
+    public void testChangedLinesOverallSuccess() throws IOException, InterruptedException {
+        RuleManager ruleManager = new RuleManager();
+        Rule classChangedLineRule = new Rule(Rule.RuleType.TOTAL_CHANGED_LINES, 40);
+        ruleManager.addRule(classChangedLineRule);
+
+        CoverageChecker coverageChecker = new CoverageChecker(ruleManager, getConfigurationManager());
+        coverageChecker.setChangedFiles(getSampleChangedFiles());
+        coverageChecker.setChangedLines(getChangedLinesOverview());
+
+        HashMap<Rule, RuleValidationResult> ruleRuleValidationResultHashMap = coverageChecker.runChecks();
+
+        Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
+
+        String expectedMessage = "The overall coverage of the changed lines is above the required percentage. Required: 40.0 Actual: 42,86%";
+
+        RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(classChangedLineRule);
+        Assertions.assertTrue(ruleValidationResult.isSuccessful());
+        Assertions.assertEquals(expectedMessage, ruleValidationResult.getMessage());
+
+    }
+
+
 }
