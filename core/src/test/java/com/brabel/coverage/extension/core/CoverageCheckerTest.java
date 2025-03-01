@@ -37,7 +37,7 @@ public class CoverageCheckerTest {
 
         RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(overallCodeCoverageRule);
         Assertions.assertFalse(ruleValidationResult.isSuccessful());
-        Assertions.assertEquals("The overall coverage is below the required percentage. Required: 80.0% Actual: 66,67%", ruleValidationResult.getMessage());
+        Assertions.assertEquals("The overall coverage is below the required percentage. Required: 80.00% Actual: 66.67%", ruleValidationResult.getMessage());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class CoverageCheckerTest {
 
         RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(overallCodeCoverageRule);
         Assertions.assertTrue(ruleValidationResult.isSuccessful());
-        Assertions.assertEquals("The overall coverage is above the required percentage. Required: 66.0% Actual: 66,67%", ruleValidationResult.getMessage());
+        Assertions.assertEquals("The overall coverage is above the required percentage. Required: 66.00% Actual: 66.67%", ruleValidationResult.getMessage());
     }
 
     private HashSet<File> getSampleChangedFiles(){
@@ -88,10 +88,10 @@ public class CoverageCheckerTest {
 
         Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
 
-        String expectedMessage = "The changed classes do not meet the overall required coverage of 80.0%: \n" +
+        String expectedMessage = "The changed classes do not meet the overall required coverage of 80.00%: \n" +
                 "The following classes are not sufficiently covered: \n" +
-                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with an overall coverage of 70.0%\n" +
-                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with an overall coverage of 60.0%\n" +
+                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with an overall coverage of 70.00%\n" +
+                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with an overall coverage of 60.00%\n" +
                 "The following classes are sufficiently covered: \n" +
                 "None";
 
@@ -113,11 +113,11 @@ public class CoverageCheckerTest {
 
         Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
 
-        String expectedMessage = "The changed classes do not meet the overall required coverage of 65.0%: \n" +
+        String expectedMessage = "The changed classes do not meet the overall required coverage of 65.00%: \n" +
                 "The following classes are not sufficiently covered: \n" +
-                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with an overall coverage of 60.0%\n" +
+                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with an overall coverage of 60.00%\n" +
                 "The following classes are sufficiently covered: \n" +
-                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with an overall coverage of 70.0%\n";
+                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with an overall coverage of 70.00%\n";
 
         RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(classCodeCoverageRule);
         Assertions.assertFalse(ruleValidationResult.isSuccessful());
@@ -137,7 +137,7 @@ public class CoverageCheckerTest {
 
         Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
 
-        String expectedMessage = "All changed classes meet the required overall test coverage of 50.0% per class";
+        String expectedMessage = "All changed classes meet the required overall test coverage of 50.00% per class";
 
         RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(classCodeCoverageRule);
         Assertions.assertTrue(ruleValidationResult.isSuccessful());
@@ -170,10 +170,10 @@ public class CoverageCheckerTest {
 
         Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
 
-        String expectedMessage = "The changed lines do not meet the required coverage of 80.0% per class: \n" +
+        String expectedMessage = "The changed lines do not meet the required coverage of 80.00% per class: \n" +
                 "The following classes were changed but those changes are not sufficently covered: \n" +
-                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with a coverage of for the changed lines of 50.0%\n" +
-                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with a coverage of for the changed lines of 40.0%\n" +
+                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with a coverage of for the changed lines of 50.00%\n" +
+                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with a coverage of for the changed lines of 40.00%\n" +
                 "The following classes are sufficently covered: \n" +
                 "None";
 
@@ -198,11 +198,11 @@ public class CoverageCheckerTest {
 
         Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
 
-        String expectedMessage = "The changed lines do not meet the required coverage of 45.0% per class: \n" +
+        String expectedMessage = "The changed lines do not meet the required coverage of 45.00% per class: \n" +
                 "The following classes were changed but those changes are not sufficently covered: \n" +
-                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with a coverage of for the changed lines of 40.0%\n" +
+                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with a coverage of for the changed lines of 40.00%\n" +
                 "The following classes are sufficently covered: \n" +
-                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with a coverage of the changed lines of 50.0%\n";
+                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with a coverage of the changed lines of 50.00%\n";
 
         RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(classChangedLineRule);
         Assertions.assertFalse(ruleValidationResult.isSuccessful());
@@ -224,7 +224,7 @@ public class CoverageCheckerTest {
 
         Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
 
-        String expectedMessage = "All the changed lines meet the required coverage of 5.0% per class.";
+        String expectedMessage = "All the changed lines meet the required coverage of 5.00% per class.";
 
         RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(classChangedLineRule);
         Assertions.assertTrue(ruleValidationResult.isSuccessful());
@@ -246,7 +246,7 @@ public class CoverageCheckerTest {
 
         Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
 
-        String expectedMessage = "The overall coverage of the changed lines is below the required percentage. Required: 80.0% Actual: 42,86%";
+        String expectedMessage = "The overall coverage of the changed lines is below the required percentage. Required: 80.00% Actual: 42.86%";
 
         RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(classChangedLineRule);
         Assertions.assertFalse(ruleValidationResult.isSuccessful());
@@ -269,7 +269,7 @@ public class CoverageCheckerTest {
 
         Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
 
-        String expectedMessage = "The overall coverage of the changed lines is above the required percentage. Required: 40.0 Actual: 42,86%";
+        String expectedMessage = "The overall coverage of the changed lines is above the required percentage. Required: 40.00% Actual: 42.86%";
 
         RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(classChangedLineRule);
         Assertions.assertTrue(ruleValidationResult.isSuccessful());
