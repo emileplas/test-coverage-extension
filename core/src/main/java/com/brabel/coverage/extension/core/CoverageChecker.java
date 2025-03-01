@@ -125,9 +125,9 @@ public class CoverageChecker {
         double coverage = (double) totalLinesCovered / totalLines * 100;
 
         if(coverage < rule.getMinimumCoverage()) {
-            return new RuleValidationResult(false, "The overall coverage of the changed lines is below the required percentage. Required: " + rule.getMinimumCoverage() + " Actual: " + coverage);
+            return new RuleValidationResult(false, "The overall coverage of the changed lines is below the required percentage. Required: " + rule.getMinimumCoverage() + "% Actual: " + String.format("%.2f", coverage) + "%");
         }else{
-            return new RuleValidationResult(true, "The overall coverage of the changed lines is above the required percentage. Required: " + rule.getMinimumCoverage() + " Actual: " + coverage);
+            return new RuleValidationResult(true, "The overall coverage of the changed lines is above the required percentage. Required: " + rule.getMinimumCoverage() + " Actual: " + String.format("%.2f", coverage) + "%");
         }
 
     }
@@ -138,7 +138,7 @@ public class CoverageChecker {
         return changedFiles;
     }
 
-    private void setChangedFiles(Set<File> changedFiles){
+    void setChangedFiles(Set<File> changedFiles){
         this.changedFiles = changedFiles;
     }
 
@@ -255,15 +255,20 @@ public class CoverageChecker {
             return new RuleValidationResult(true, "All changed classes meet the required coverage of " + rule.getMinimumCoverage() + "%");
         }else{
             StringBuilder message = new StringBuilder();
-            message.append("The changed classes do not meet the overall required coverage of " + rule.getMinimumCoverage() + "%: ");
-            message.append("The following classes are not sufficently covered: ");
+            message.append("The changed classes do not meet the overall required coverage of " + rule.getMinimumCoverage() + "%: \n");
+            message.append("The following classes are not sufficiently covered: \n");
             for(String className : insufficientCoverage.keySet()){
-                message.append(className + " with an overall coverage of " + insufficientCoverage.get(className) + "%");
+                message.append(className + " with an overall coverage of " + insufficientCoverage.get(className) + "%\n");
             }
-            message.append("The following classes are sufficently covered: ");
-            for(String className : sufficientCoverage.keySet()){
-                message.append(className + " with an overall coverage of " + sufficientCoverage.get(className) + "%");
+            message.append("The following classes are sufficiently covered: \n");
+            if(sufficientCoverage.isEmpty()){
+                message.append("None");
+            }else{
+                for(String className : sufficientCoverage.keySet()){
+                    message.append(className + " with an overall coverage of " + sufficientCoverage.get(className) + "%\n");
+                }
             }
+
             return new RuleValidationResult(false, message.toString());
         }
     }
@@ -284,9 +289,9 @@ public class CoverageChecker {
         double coverage = (double) totalCodeCoverage.getLinesCovered() / totalLines * 100;
 
         if(coverage < rule.getMinimumCoverage()){
-            return new RuleValidationResult(false, "The overall coverage is below the required percentage. Required: " + rule.getMinimumCoverage() + " Actual: " + coverage);
+            return new RuleValidationResult(false, "The overall coverage is below the required percentage. Required: " + rule.getMinimumCoverage() + "% Actual: " + String.format("%.2f", coverage) + "%");
         }else{
-            return new RuleValidationResult(true, "The overall coverage is above the required percentage. Required: " + rule.getMinimumCoverage() + " Actual: " + coverage);
+            return new RuleValidationResult(true, "The overall coverage is above the required percentage. Required: " + rule.getMinimumCoverage() + "% Actual: " + String.format("%.2f", coverage) + "%");
         }
     }
 }
