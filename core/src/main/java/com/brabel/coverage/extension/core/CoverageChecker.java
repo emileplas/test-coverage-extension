@@ -78,7 +78,7 @@ public class CoverageChecker {
         return changedLines;
     }
 
-    private void setChangedLines(HashMap<String, int[]> changedLines){
+    void setChangedLines(HashMap<String, int[]> changedLines){
         this.changedLines = changedLines;
     }
 
@@ -202,14 +202,18 @@ public class CoverageChecker {
             return new RuleValidationResult(true, "All the changed lines meet the required coverage of " + rule.getMinimumCoverage() + "% per class.");
         }else{
             StringBuilder message = new StringBuilder();
-            message.append("The changed lines do not meet the required coverage of " + rule.getMinimumCoverage() + "% per class: ");
-            message.append("The following classes are not sufficently covered: ");
+            message.append("The changed lines do not meet the required coverage of " + rule.getMinimumCoverage() + "% per class: \n");
+            message.append("The following classes were changed but those changes are not sufficently covered: \n");
             for(String className : insufficientCoverage.keySet()){
-                message.append(className + " with an overall coverage of " + insufficientCoverage.get(className) + "%");
+                message.append(className + " with a coverage of for the changed lines of " + insufficientCoverage.get(className) + "%\n");
             }
-            message.append("The following classes are sufficently covered: ");
-            for(String className : sufficientCoverage.keySet()){
-                message.append(className + " with an overall coverage of " + sufficientCoverage.get(className) + "%");
+            message.append("The following classes are sufficently covered: \n");
+            if(sufficientCoverage.isEmpty()) {
+                message.append("None");
+            }else{
+                for(String className : sufficientCoverage.keySet()){
+                    message.append(className + " with a coverage of the changed lines of " + sufficientCoverage.get(className) + "%\n");
+                }
             }
             return new RuleValidationResult(false, message.toString());
         }
@@ -252,7 +256,7 @@ public class CoverageChecker {
         }
 
         if(success) {
-            return new RuleValidationResult(true, "All changed classes meet the required coverage of " + rule.getMinimumCoverage() + "%");
+            return new RuleValidationResult(true, "All changed classes meet the required overall test coverage of " + rule.getMinimumCoverage() + "% per class");
         }else{
             StringBuilder message = new StringBuilder();
             message.append("The changed classes do not meet the overall required coverage of " + rule.getMinimumCoverage() + "%: \n");

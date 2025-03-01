@@ -123,4 +123,112 @@ public class CoverageCheckerTest {
         Assertions.assertFalse(ruleValidationResult.isSuccessful());
         Assertions.assertEquals(expectedMessage, ruleValidationResult.getMessage());
     }
+
+    @Test
+    public void testCoverageCheckerClassCodeCoverageRuleSuccess() throws IOException, InterruptedException {
+        Rule classCodeCoverageRule = new Rule(Rule.RuleType.PER_CLASS, 50);
+        RuleManager ruleManager = new RuleManager();
+        ruleManager.addRule(classCodeCoverageRule);
+
+        CoverageChecker coverageChecker = new CoverageChecker(ruleManager, getConfigurationManager());
+        coverageChecker.setChangedFiles(getSampleChangedFiles());
+
+        HashMap<Rule, RuleValidationResult> ruleRuleValidationResultHashMap = coverageChecker.runChecks();
+
+        Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
+
+        String expectedMessage = "All changed classes meet the required overall test coverage of 50.0% per class";
+
+        RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(classCodeCoverageRule);
+        Assertions.assertTrue(ruleValidationResult.isSuccessful());
+        Assertions.assertEquals(expectedMessage, ruleValidationResult.getMessage());
+    }
+
+    private HashMap<String, int[]> getChangedLinesOverview(){
+        HashMap<String, int[]> changedLinesOverview = new HashMap<>();
+
+        changedLinesOverview.put("diff --git a/single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java b/single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java", new int[]{3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34});
+        changedLinesOverview.put("diff --git a/single-module-example/src/test/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClassTest.java b/single-module-example/src/test/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClassTest.java",  new int[]{3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18});
+
+        //should not be included in the result
+        changedLinesOverview.put("diff --git a/core/pom.xml b/core/pom.xml", new int[]{-2, -2});
+
+        return changedLinesOverview;
+    }
+
+    @Test
+    public void testChangedLinesPerClassFail() throws IOException, InterruptedException {
+        RuleManager ruleManager = new RuleManager();
+        Rule classChangedLineRule = new Rule(Rule.RuleType.PER_CLASS_CHANGED_LINES, 80);
+        ruleManager.addRule(classChangedLineRule);
+
+        CoverageChecker coverageChecker = new CoverageChecker(ruleManager, getConfigurationManager());
+        coverageChecker.setChangedFiles(getSampleChangedFiles());
+        coverageChecker.setChangedLines(getChangedLinesOverview());
+
+        HashMap<Rule, RuleValidationResult> ruleRuleValidationResultHashMap = coverageChecker.runChecks();
+
+        Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
+
+        String expectedMessage = "The changed lines do not meet the required coverage of 80.0% per class: \n" +
+                "The following classes were changed but those changes are not sufficently covered: \n" +
+                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with a coverage of for the changed lines of 50.0%\n" +
+                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with a coverage of for the changed lines of 40.0%\n" +
+                "The following classes are sufficently covered: \n" +
+                "None";
+
+        RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(classChangedLineRule);
+        Assertions.assertFalse(ruleValidationResult.isSuccessful());
+        Assertions.assertEquals(expectedMessage, ruleValidationResult.getMessage());
+
+    }
+
+
+    @Test
+    public void testChangedLinesPerClassPartlySuccess() throws IOException, InterruptedException {
+        RuleManager ruleManager = new RuleManager();
+        Rule classChangedLineRule = new Rule(Rule.RuleType.PER_CLASS_CHANGED_LINES, 45);
+        ruleManager.addRule(classChangedLineRule);
+
+        CoverageChecker coverageChecker = new CoverageChecker(ruleManager, getConfigurationManager());
+        coverageChecker.setChangedFiles(getSampleChangedFiles());
+        coverageChecker.setChangedLines(getChangedLinesOverview());
+
+        HashMap<Rule, RuleValidationResult> ruleRuleValidationResultHashMap = coverageChecker.runChecks();
+
+        Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
+
+        String expectedMessage = "The changed lines do not meet the required coverage of 45.0% per class: \n" +
+                "The following classes were changed but those changes are not sufficently covered: \n" +
+                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with a coverage of for the changed lines of 40.0%\n" +
+                "The following classes are sufficently covered: \n" +
+                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with a coverage of the changed lines of 50.0%\n";
+
+        RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(classChangedLineRule);
+        Assertions.assertFalse(ruleValidationResult.isSuccessful());
+        Assertions.assertEquals(expectedMessage, ruleValidationResult.getMessage());
+
+    }
+
+    @Test
+    public void testChangedLinesPerClassSuccess() throws IOException, InterruptedException {
+        RuleManager ruleManager = new RuleManager();
+        Rule classChangedLineRule = new Rule(Rule.RuleType.PER_CLASS_CHANGED_LINES, 5);
+        ruleManager.addRule(classChangedLineRule);
+
+        CoverageChecker coverageChecker = new CoverageChecker(ruleManager, getConfigurationManager());
+        coverageChecker.setChangedFiles(getSampleChangedFiles());
+        coverageChecker.setChangedLines(getChangedLinesOverview());
+
+        HashMap<Rule, RuleValidationResult> ruleRuleValidationResultHashMap = coverageChecker.runChecks();
+
+        Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
+
+        String expectedMessage = "All the changed lines meet the required coverage of 5.0% per class.";
+
+        RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(classChangedLineRule);
+        Assertions.assertTrue(ruleValidationResult.isSuccessful());
+        Assertions.assertEquals(expectedMessage, ruleValidationResult.getMessage());
+
+    }
 }
