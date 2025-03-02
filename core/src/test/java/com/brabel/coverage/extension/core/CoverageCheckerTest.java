@@ -173,10 +173,10 @@ public class CoverageCheckerTest {
         Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
 
         String expectedMessage = "The changed lines do not meet the required coverage of 80.00% per class: \n" +
-                "The following classes were changed but those changes are not sufficently covered: \n" +
-                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with a coverage of for the changed lines of 50.00%\n" +
-                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with a coverage of for the changed lines of 40.00%\n" +
-                "The following classes are sufficently covered: \n" +
+                "The following classes were changed but those changes are not sufficiently covered: \n" +
+                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with a coverage of the changed lines of 50.00%\n" +
+                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with a coverage of the changed lines of 40.00%\n" +
+                "The following classes are sufficiently covered: \n" +
                 "None";
 
         RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(classChangedLineRule);
@@ -201,9 +201,9 @@ public class CoverageCheckerTest {
         Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
 
         String expectedMessage = "The changed lines do not meet the required coverage of 45.00% per class: \n" +
-                "The following classes were changed but those changes are not sufficently covered: \n" +
-                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with a coverage of for the changed lines of 40.00%\n" +
-                "The following classes are sufficently covered: \n" +
+                "The following classes were changed but those changes are not sufficiently covered: \n" +
+                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with a coverage of the changed lines of 40.00%\n" +
+                "The following classes are sufficiently covered: \n" +
                 "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with a coverage of the changed lines of 50.00%\n";
 
         RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(classChangedLineRule);

@@ -204,11 +204,11 @@ public class CoverageChecker {
         }else{
             StringBuilder message = new StringBuilder();
             message.append("The changed lines do not meet the required coverage of " + doubleToString(rule.getThreshold()) + "% per class: \n");
-            message.append("The following classes were changed but those changes are not sufficently covered: \n");
+            message.append("The following classes were changed but those changes are not sufficiently covered: \n");
             for(String className : insufficientCoverage.keySet()){
-                message.append(className + " with a coverage of for the changed lines of " + doubleToString(insufficientCoverage.get(className)) + "%\n");
+                message.append(className + " with a coverage of the changed lines of " + doubleToString(insufficientCoverage.get(className)) + "%\n");
             }
-            message.append("The following classes are sufficently covered: \n");
+            message.append("The following classes are sufficiently covered: \n");
             if(sufficientCoverage.isEmpty()) {
                 message.append("None");
             }else{
