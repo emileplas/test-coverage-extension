@@ -12,12 +12,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 
+//FIXME: it seems that when we update the project, the tests fails. We need copy the new jacoco.exec to resources and use that one
+//      We should find a better way of mocking this.
 public class CoverageCheckerTest {
 
     private ConfigurationManager getConfigurationManager(){
         ConfigurationManager configurationManager = new ConfigurationManager();
         configurationManager.setBranchToCompare("develop");
-        configurationManager.setJacocoExecFile(new File("src/test/resources/jacoco-examples-exec/single-module-example-jacoco-output.exec"));
+        configurationManager.setJacocoExecFile(new File("src/test/resources/jacoco-examples-exec/jacoco.exec"));
         configurationManager.setProjectBaseDir(new File("../single-module-example/"));
         configurationManager.setClassPath("target/classes");
         configurationManager.setSourcePaths(new String[]{"src/main/java"});

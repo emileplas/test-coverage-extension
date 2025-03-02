@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class JaCoCoInteractorTest {
 
-    private static File singleModuleFile = new File("src/test/resources/jacoco-examples-exec/single-module-example-jacoco-output.exec");
+    private static File singleModuleFile = new File("src/test/resources/jacoco-examples-exec/jacoco.exec");
 
     @Test
     public void testGetTotalCodeCoverageSingleModuleProject(){
