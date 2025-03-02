@@ -10,6 +10,7 @@ import com.brabel.coverage.extension.core.services.RuleManager;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
@@ -19,7 +20,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-@Mojo(name = "check")
+@Mojo(name = "report", defaultPhase = LifecyclePhase.PREPARE_PACKAGE)
 public class CoverageCheckMojo extends AbstractMojo {
 
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
@@ -44,17 +45,20 @@ public class CoverageCheckMojo extends AbstractMojo {
     private List<Rule> rules;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        /*getLog().info("Project Base Directory: " + basedir);
+        getLog().info("Project Base Directory: " + basedir);
         getLog().info("Classpath: " + classpath);
         getLog().info("Source Paths: " + sourcepaths);
         getLog().info("JaCoCo Execution File: " + jacocoExecFile);
         getLog().info("Branch to Compare: " + branchToCompare);
 
         for (Rule rule : rules) {
-            getLog().info("Rule Type: " + rule.getRuleType() + ", Threshold: " + rule.getMinimumCoverage());
-        }*/
+            getLog().info("Rule Type: " + rule.getType() + ", Threshold: " + rule.getThreshold());
+        }
+
+
+
         ConfigurationManager configurationManager = new ConfigurationManager();
-        configurationManager.setClassPath(classpath.getPath());
+        configurationManager.setClassPath(classpath);
         configurationManager.setSourcePaths(sourcepaths.toArray(new String[0]));
         configurationManager.setJacocoExecFile(jacocoExecFile);
         configurationManager.setBranchToCompare(branchToCompare);
@@ -85,18 +89,15 @@ public class CoverageCheckMojo extends AbstractMojo {
             }
 
 
-            if(isFailed){
+            //if(isFailed){
                 throw new MojoFailureException(totalMessage.toString());
-            }else{
+            /*}else{
                 getLog().info(totalMessage.toString());
-            }
+            }*/
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
-
-        // Add your code coverage checking logic here
     }
 }
