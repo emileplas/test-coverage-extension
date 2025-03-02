@@ -89,11 +89,11 @@ public class CoverageCheckMojo extends AbstractMojo {
             }
 
 
-            //if(isFailed){
+            if(isFailed){
                 throw new MojoFailureException(totalMessage.toString());
-            /*}else{
+            }else{
                 getLog().info(totalMessage.toString());
-            }*/
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
