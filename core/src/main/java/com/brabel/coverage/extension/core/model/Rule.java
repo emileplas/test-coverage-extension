@@ -33,10 +33,14 @@ public class Rule {
         PER_CLASS_CHANGED_LINES
     }
 
-    private final RuleType type;
+    private RuleType type;
 
 
-    private final double threshold;
+    private double threshold;
+
+    public Rule() {
+        // Default constructor
+    }
 
     /**
      * Constructs a new Rule with the specified type and minimum coverage.
