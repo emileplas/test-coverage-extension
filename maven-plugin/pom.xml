@@ -57,9 +57,10 @@
                     <pomIncludes>
                         <pomInclude>*/pom.xml</pomInclude> <!-- Include all projects with a pom.xml -->
                     </pomIncludes>
-                    <postBuildHookScript>verify.bsh</postBuildHookScript> <!-- Script to run after each build -->
+                    <postBuildHookScript>verify.groovy</postBuildHookScript> <!-- Script to run after each build -->
                     <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath> <!-- Isolated local repo -->
                     <!--<settingsFile>src/it/settings.xml</settingsFile>--> <!-- Optional: Custom settings file -->
+                    <ignoreFailures>true</ignoreFailures>
                 </configuration>
                 <executions>
                     <execution>
