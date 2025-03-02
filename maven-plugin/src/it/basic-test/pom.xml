@@ -9,16 +9,50 @@
 
     <build>
         <plugins>
+
+            <!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.12</version>
+                <executions>
+                    <!-- Attaches the JaCoCo agent to the JVM -->
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+
+                    <!-- Generates code coverage reports in multiple formats -->
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/jacoco-report</outputDirectory>
+                            <formats>
+                                <format>HTML</format>
+                                <format>XML</format>
+                                <format>CSV</format>
+                            </formats>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
             <plugin>
                 <groupId>com.brabel</groupId>
                 <artifactId>test-coverage-extension-plugin</artifactId>
                 <version>1.0.0-ALPHA</version>
                 <configuration>
-                    <project.basedir>${project.basedir}</project.basedir>
-                    <project.classpath>${project.build.outputDirectory}</project.classpath>
-                    <project.sourcepaths>
+                    <basedir>${project.basedir}</basedir>
+                    <classpath>${project.build.outputDirectory}</classpath>
+                    <sourcepaths>
                         <sourcepath>src/main/java</sourcepath>
-                    </project.sourcepaths>
+                    </sourcepaths>
                     <jacoco.exec.file>${project.build.directory}/jacoco.exec</jacoco.exec.file>
                     <branch.to.compare>develop</branch.to.compare>
                     <rules>
@@ -30,12 +64,24 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <phase>prepare-package</phase>
                         <goals>
-                            <goal>check</goal>
+                            <goal>report</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
+
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.12.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
