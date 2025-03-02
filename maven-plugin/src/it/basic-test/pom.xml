@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.brabel.it</groupId>
+    <artifactId>basic-test</artifactId>
+    <version>1.0.0</version>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.brabel</groupId>
+                <artifactId>test-coverage-extension-plugin</artifactId>
+                <version>1.0.0-ALPHA</version>
+                <configuration>
+                    <project.basedir>${project.basedir}</project.basedir>
+                    <project.classpath>${project.build.outputDirectory}</project.classpath>
+                    <project.sourcepaths>
+                        <sourcepath>src/main/java</sourcepath>
+                    </project.sourcepaths>
+                    <jacoco.exec.file>${project.build.directory}/jacoco.exec</jacoco.exec.file>
+                    <branch.to.compare>develop</branch.to.compare>
+                    <rules>
+                        <rule>
+                            <type>OVERALL</type>
+                            <threshold>80</threshold>
+                        </rule>
+                    </rules>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
