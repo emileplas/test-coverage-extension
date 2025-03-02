@@ -75,6 +75,8 @@ public class CoverageCheckMojo extends AbstractMojo {
 
             StringBuilder totalMessage = new StringBuilder();
 
+            totalMessage.append("\n");
+
             boolean isFailed = false;
 
 
