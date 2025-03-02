@@ -4,10 +4,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.brabel.it</groupId>
-    <artifactId>overall-coverage-failure</artifactId>
+    <artifactId>per-class-failure</artifactId>
     <version>1.0.0</version>
 
-    <description>IT that has a required overall coverage that is not met. Should fail.</description>
+    <description>IT that has a required overall coverage per changed class that is NOT met. Should fail.</description>
 
     <build>
         <plugins>
