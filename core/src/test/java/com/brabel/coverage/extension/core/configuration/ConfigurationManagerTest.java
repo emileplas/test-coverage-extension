@@ -18,9 +18,9 @@ public class ConfigurationManagerTest {
     @Test
     public void setGetClassPath() {
         ConfigurationManager configurationManager = new ConfigurationManager();
-        String classPath = "target/classes";
-        configurationManager.setClassPath(classPath);
-        Assertions.assertEquals(classPath, configurationManager.getClassPath());
+        File classPathDir = new File("target/classes");
+        configurationManager.setClassPath(classPathDir);
+        Assertions.assertEquals(classPathDir, configurationManager.getClassPath());
     }
 
     @Test

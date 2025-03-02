@@ -56,7 +56,7 @@ public class JaCoCoInteractor {
      * @param baseDir the base directory of the project. In maven this comes from project.getBasedir()
      * @throws IOException if the Jacoco.exec file cannot be read
      */
-    public JaCoCoInteractor(File jacocoExecFile, String classPathDirectory, String[] sourceCodePaths, File baseDir) throws IOException {
+    public JaCoCoInteractor(File jacocoExecFile, File classPathDirectory, String[] sourceCodePaths, File baseDir) throws IOException {
         if(jacocoExecFile == null){
             throw new IllegalArgumentException("The Jacoco.exec file cannot be null.");
         }
@@ -78,9 +78,9 @@ public class JaCoCoInteractor {
         this.sourceCodePaths = sourceCodePaths;
         this.baseDir = baseDir;
 
-        File classPathDir = new File(baseDir, classPathDirectory);
+        //File classPathDir = new File(baseDir, classPathDirectory);
 
-        analyzeClassesDirectory(jacocoExecFile, getCoverageBuilder(), classPathDir);
+        analyzeClassesDirectory(jacocoExecFile, getCoverageBuilder(), classPathDirectory);
     }
 
     /**

@@ -21,7 +21,7 @@ public class CoverageCheckerTest {
         configurationManager.setBranchToCompare("develop");
         configurationManager.setJacocoExecFile(new File("src/test/resources/jacoco-examples-exec/jacoco.exec"));
         configurationManager.setProjectBaseDir(new File("../single-module-example/"));
-        configurationManager.setClassPath("target/classes");
+        configurationManager.setClassPath(new File("../single-module-example/target/classes"));
         configurationManager.setSourcePaths(new String[]{"src/main/java"});
         return configurationManager;
     }
