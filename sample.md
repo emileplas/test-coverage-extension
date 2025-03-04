@@ -1,0 +1,31 @@
+
+
+```xml
+            <plugins>
+    <plugin>
+        <groupId>com.brabel</groupId>
+        <artifactId>test-coverage-extension</artifactId>
+        <version>0.0.1</version>
+        <configuration>
+            <project.basedir>project.getBasedir()</project.basedir>
+            <project.classpath>target/classes</project.classpath>
+            <project.sourcepaths>
+                <sourcepath>src/main/java</sourcepath>
+                <sourcepath>src/main/gen</sourcepath>
+            </project.sourcepaths>
+            <jacoco.exec.file>target/jacoco.exec</jacoco.exec.file>
+            <branch.to.compare>develop</branch.to.compare>
+        </configuration>
+        <rules>
+            <rule>
+                <type>OVERALL</type>
+                <threshold>80</threshold>
+            </rule>
+            <rule>
+                <type>PER_CLASS</type>
+                <threshold>75</threshold>
+            </rule>
+        </rules>
+    </plugin>
+</plugins>
+```

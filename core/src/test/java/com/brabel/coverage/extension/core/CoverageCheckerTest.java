@@ -12,14 +12,16 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 
+//FIXME: it seems that when we update the project, the tests fails. We need copy the new jacoco.exec to resources and use that one
+//      We should find a better way of mocking this.
 public class CoverageCheckerTest {
 
     private ConfigurationManager getConfigurationManager(){
         ConfigurationManager configurationManager = new ConfigurationManager();
         configurationManager.setBranchToCompare("develop");
-        configurationManager.setJacocoExecFile(new File("src/test/resources/jacoco-examples-exec/single-module-example-jacoco-output.exec"));
+        configurationManager.setJacocoExecFile(new File("src/test/resources/jacoco-examples-exec/jacoco.exec"));
         configurationManager.setProjectBaseDir(new File("../single-module-example/"));
-        configurationManager.setClassPath("target/classes");
+        configurationManager.setClassPath(new File("../single-module-example/target/classes"));
         configurationManager.setSourcePaths(new String[]{"src/main/java"});
         return configurationManager;
     }
@@ -171,10 +173,10 @@ public class CoverageCheckerTest {
         Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
 
         String expectedMessage = "The changed lines do not meet the required coverage of 80.00% per class: \n" +
-                "The following classes were changed but those changes are not sufficently covered: \n" +
-                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with a coverage of for the changed lines of 50.00%\n" +
-                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with a coverage of for the changed lines of 40.00%\n" +
-                "The following classes are sufficently covered: \n" +
+                "The following classes were changed but those changes are not sufficiently covered: \n" +
+                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with a coverage of the changed lines of 50.00%\n" +
+                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with a coverage of the changed lines of 40.00%\n" +
+                "The following classes are sufficiently covered: \n" +
                 "None";
 
         RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(classChangedLineRule);
@@ -199,9 +201,9 @@ public class CoverageCheckerTest {
         Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
 
         String expectedMessage = "The changed lines do not meet the required coverage of 45.00% per class: \n" +
-                "The following classes were changed but those changes are not sufficently covered: \n" +
-                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with a coverage of for the changed lines of 40.00%\n" +
-                "The following classes are sufficently covered: \n" +
+                "The following classes were changed but those changes are not sufficiently covered: \n" +
+                "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with a coverage of the changed lines of 40.00%\n" +
+                "The following classes are sufficiently covered: \n" +
                 "../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with a coverage of the changed lines of 50.00%\n";
 
         RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(classChangedLineRule);

@@ -26,13 +26,13 @@ public class ConfigurationManager {
         return projectBaseDir;
     }
 
-    String classPath;
+    File classPath;
 
     /**
      * Sets the class path. In Maven this is 'target/classes'
      * @param classPath the class path
      */
-    public void setClassPath(String classPath) {
+    public void setClassPath(File classPath) {
         this.classPath = classPath;
     }
 
@@ -41,7 +41,7 @@ public class ConfigurationManager {
      * In Maven this is 'target/classes'
      * @return the class path
      */
-    public String getClassPath() {
+    public File getClassPath() {
         return classPath;
     }
 

@@ -33,24 +33,28 @@ public class Rule {
         PER_CLASS_CHANGED_LINES
     }
 
-    private final RuleType ruleType;
+    private RuleType type;
 
 
-    private final double minimumCoverage;
+    private double threshold;
+
+    public Rule() {
+        // Default constructor
+    }
 
     /**
      * Constructs a new Rule with the specified type and minimum coverage.
      *
-     * @param ruleType         the type of rule
-     * @param minimumCoverage  the minimum coverage required (must be between 0 and 100)
+     * @param type         the type of rule
+     * @param threshold  the minimum coverage required (must be between 0 and 100)
      * @throws IllegalArgumentException if minimumCoverage is not between 0 and 100
      */
-    public Rule(RuleType ruleType, double minimumCoverage) {
-        if (minimumCoverage < 0 || minimumCoverage > 100) {
+    public Rule(RuleType type, double threshold) {
+        if (threshold < 0 || threshold > 100) {
             throw new IllegalArgumentException("Minimum coverage must be between 0 and 100");
         }
-        this.ruleType = ruleType;
-        this.minimumCoverage = minimumCoverage;
+        this.type = type;
+        this.threshold = threshold;
     }
 
     /**
@@ -58,8 +62,8 @@ public class Rule {
      *
      * @return the rule type
      */
-    public RuleType getRuleType() {
-        return ruleType;
+    public RuleType getType() {
+        return type;
     }
 
     /**
@@ -67,7 +71,7 @@ public class Rule {
      *
      * @return the minimum coverage
      */
-    public double getMinimumCoverage() {
-        return minimumCoverage;
+    public double getThreshold() {
+        return threshold;
     }
 }

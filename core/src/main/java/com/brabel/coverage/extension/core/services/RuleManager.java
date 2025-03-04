@@ -38,8 +38,8 @@ public class RuleManager {
         //check if there are no 2 rules of the same type
         for (int i = 0; i < rules.size(); i++) {
             for (int j = i + 1; j < rules.size(); j++) {
-                if(rules.get(i).getRuleType() == rules.get(j).getRuleType()){
-                    throw new IllegalArgumentException("There are 2 rules of the same type: " + rules.get(i).getRuleType());
+                if(rules.get(i).getType() == rules.get(j).getType()){
+                    throw new IllegalArgumentException("There are 2 rules of the same type: " + rules.get(i).getType());
                 }
             }
         }
@@ -75,8 +75,8 @@ public class RuleManager {
         }
         //check if there are no 2 rules of the same type
         for (Rule r : rules) {
-            if(r.getRuleType() == rule.getRuleType()){
-                throw new IllegalArgumentException("Rule could not be added since there is already a rule of the same type: " + rule.getRuleType());
+            if(r.getType() == rule.getType()){
+                throw new IllegalArgumentException("Rule could not be added since there is already a rule of the same type: " + rule.getType());
             }
         }
         rules.add(rule);

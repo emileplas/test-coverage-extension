@@ -51,16 +51,16 @@ public class CoverageChecker {
         HashMap<Rule, RuleValidationResult> ruleValidationResults = new HashMap<>();
 
         for (Rule rule : rules) {
-            if(rule.getRuleType() == Rule.RuleType.OVERALL){
+            if(rule.getType() == Rule.RuleType.OVERALL){
                 RuleValidationResult ruleValidationResult = checkOverallCoverageRule(rule, jaCoCoInteractor);
                 ruleValidationResults.put(rule, ruleValidationResult);
-            } else if(rule.getRuleType() == Rule.RuleType.PER_CLASS){
+            } else if(rule.getType() == Rule.RuleType.PER_CLASS){
                 RuleValidationResult ruleValidationResult = checkPerClassCoverageRule(rule, jaCoCoInteractor, getConfigurationManager().getBranchToCompare());
                 ruleValidationResults.put(rule, ruleValidationResult);
-            } else if(rule.getRuleType() == Rule.RuleType.PER_CLASS_CHANGED_LINES){
+            } else if(rule.getType() == Rule.RuleType.PER_CLASS_CHANGED_LINES){
                 RuleValidationResult ruleValidationResult = checkPerClassChangedLinesCoverageRule(rule, jaCoCoInteractor, getConfigurationManager().getBranchToCompare());
                 ruleValidationResults.put(rule, ruleValidationResult);
-            } else if(rule.getRuleType() == Rule.RuleType.TOTAL_CHANGED_LINES){
+            } else if(rule.getType() == Rule.RuleType.TOTAL_CHANGED_LINES){
                 RuleValidationResult ruleValidationResult = checkTotalChangedLinesCoverageRule(rule, jaCoCoInteractor, getConfigurationManager().getBranchToCompare());
                 ruleValidationResults.put(rule, ruleValidationResult);
             }
@@ -125,10 +125,10 @@ public class CoverageChecker {
 
         double coverage = (double) totalLinesCovered / totalLines * 100;
 
-        if(coverage < rule.getMinimumCoverage()) {
-            return new RuleValidationResult(false, "The overall coverage of the changed lines is below the required percentage. Required: " +  doubleToString(rule.getMinimumCoverage()) + "% Actual: " + doubleToString(coverage) + "%");
+        if(coverage < rule.getThreshold()) {
+            return new RuleValidationResult(false, "The overall coverage of the changed lines is below the required percentage. Required: " +  doubleToString(rule.getThreshold()) + "% Actual: " + doubleToString(coverage) + "%");
         }else{
-            return new RuleValidationResult(true, "The overall coverage of the changed lines is above the required percentage. Required: " + doubleToString(rule.getMinimumCoverage()) + "% Actual: " + doubleToString(coverage) + "%");
+            return new RuleValidationResult(true, "The overall coverage of the changed lines is above the required percentage. Required: " + doubleToString(rule.getThreshold()) + "% Actual: " + doubleToString(coverage) + "%");
         }
 
     }
@@ -191,7 +191,7 @@ public class CoverageChecker {
             CodeCoverage codeCoverage = getTotalCodeCoverageOfChangedLines().get(className);
             int totalLines = codeCoverage.getLinesCovered() + codeCoverage.getLinesMissed();
             double coverage = (double) codeCoverage.getLinesCovered() / totalLines * 100;
-            if(coverage < rule.getMinimumCoverage()){
+            if(coverage < rule.getThreshold()){
                 success = false;
                 insufficientCoverage.put(className, coverage);
             }else{
@@ -200,15 +200,15 @@ public class CoverageChecker {
         }
 
         if(success) {
-            return new RuleValidationResult(true, "All the changed lines meet the required coverage of " + doubleToString(rule.getMinimumCoverage()) + "% per class.");
+            return new RuleValidationResult(true, "All the changed lines meet the required coverage of " + doubleToString(rule.getThreshold()) + "% per class.");
         }else{
             StringBuilder message = new StringBuilder();
-            message.append("The changed lines do not meet the required coverage of " + doubleToString(rule.getMinimumCoverage()) + "% per class: \n");
-            message.append("The following classes were changed but those changes are not sufficently covered: \n");
+            message.append("The changed lines do not meet the required coverage of " + doubleToString(rule.getThreshold()) + "% per class: \n");
+            message.append("The following classes were changed but those changes are not sufficiently covered: \n");
             for(String className : insufficientCoverage.keySet()){
-                message.append(className + " with a coverage of for the changed lines of " + doubleToString(insufficientCoverage.get(className)) + "%\n");
+                message.append(className + " with a coverage of the changed lines of " + doubleToString(insufficientCoverage.get(className)) + "%\n");
             }
-            message.append("The following classes are sufficently covered: \n");
+            message.append("The following classes are sufficiently covered: \n");
             if(sufficientCoverage.isEmpty()) {
                 message.append("None");
             }else{
@@ -248,7 +248,7 @@ public class CoverageChecker {
             CodeCoverage codeCoverage = overallClassCodeCoverage.get(className);
             int totalLines = codeCoverage.getLinesCovered() + codeCoverage.getLinesMissed();
             double coverage = (double) codeCoverage.getLinesCovered() / totalLines * 100;
-            if(coverage < rule.getMinimumCoverage()){
+            if(coverage < rule.getThreshold()){
                 success = false;
                 insufficientCoverage.put(className, coverage);
             }else{
@@ -257,10 +257,10 @@ public class CoverageChecker {
         }
 
         if(success) {
-            return new RuleValidationResult(true, "All changed classes meet the required overall test coverage of " + doubleToString(rule.getMinimumCoverage()) + "% per class");
+            return new RuleValidationResult(true, "All changed classes meet the required overall test coverage of " + doubleToString(rule.getThreshold()) + "% per class");
         }else{
             StringBuilder message = new StringBuilder();
-            message.append("The changed classes do not meet the overall required coverage of " + doubleToString(rule.getMinimumCoverage()) + "%: \n");
+            message.append("The changed classes do not meet the overall required coverage of " + doubleToString(rule.getThreshold()) + "%: \n");
             message.append("The following classes are not sufficiently covered: \n");
             for(String className : insufficientCoverage.keySet()){
                 message.append(className + " with an overall coverage of " + doubleToString(insufficientCoverage.get(className)) + "%\n");
@@ -293,10 +293,10 @@ public class CoverageChecker {
 
         double coverage = (double) totalCodeCoverage.getLinesCovered() / totalLines * 100;
 
-        if(coverage < rule.getMinimumCoverage()){
-            return new RuleValidationResult(false, "The overall coverage is below the required percentage. Required: " + doubleToString(rule.getMinimumCoverage()) + "% Actual: " + doubleToString(coverage) + "%");
+        if(coverage < rule.getThreshold()){
+            return new RuleValidationResult(false, "The overall coverage is below the required percentage. Required: " + doubleToString(rule.getThreshold()) + "% Actual: " + doubleToString(coverage) + "%");
         }else{
-            return new RuleValidationResult(true, "The overall coverage is above the required percentage. Required: " + doubleToString(rule.getMinimumCoverage()) + "% Actual: " + doubleToString(coverage) + "%");
+            return new RuleValidationResult(true, "The overall coverage is above the required percentage. Required: " + doubleToString(rule.getThreshold()) + "% Actual: " + doubleToString(coverage) + "%");
         }
     }
 }

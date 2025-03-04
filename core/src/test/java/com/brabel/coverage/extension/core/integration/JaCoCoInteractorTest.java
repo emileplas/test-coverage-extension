@@ -17,7 +17,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class JaCoCoInteractorTest {
 
-    private static File singleModuleFile = new File("src/test/resources/jacoco-examples-exec/single-module-example-jacoco-output.exec");
+    private static File singleModuleFile = new File("src/test/resources/jacoco-examples-exec/jacoco.exec");
+
+    File classPathDir = new File("../single-module-example/target/classes");
 
     @Test
     public void testGetTotalCodeCoverageSingleModuleProject(){
@@ -25,7 +27,7 @@ public class JaCoCoInteractorTest {
         CodeCoverage expectedCodeCoverage = new CodeCoverage(null, CodeCoverage.CoverageType.TOTAL, 21, 51,  5, 10);
 
         try {
-            JaCoCoInteractor jaCoCoInteractor = new JaCoCoInteractor(singleModuleFile, "target/classes", new String[]{"src/main/java"}, new File("../single-module-example/"));
+            JaCoCoInteractor jaCoCoInteractor = new JaCoCoInteractor(singleModuleFile, classPathDir, new String[]{"src/main/java"}, new File("../single-module-example/"));
             CodeCoverage actualCodeCoverage = jaCoCoInteractor.getTotalCodeCoverage();
 
             assertEquals(expectedCodeCoverage.getCoverageType(), actualCodeCoverage.getCoverageType());
@@ -69,7 +71,7 @@ public class JaCoCoInteractorTest {
 
         HashMap<String, CodeCoverage> codeCoveragePerChangedFile;
         try {
-            JaCoCoInteractor jaCoCoInteractor = new JaCoCoInteractor(singleModuleFile, "target/classes", new String[]{"src/main/java"}, new File("../single-module-example/"));
+            JaCoCoInteractor jaCoCoInteractor = new JaCoCoInteractor(singleModuleFile, classPathDir, new String[]{"src/main/java"}, new File("../single-module-example/"));
             codeCoveragePerChangedFile = jaCoCoInteractor.getOverallCodeCoverageForChangedFiles(result);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -142,7 +144,7 @@ public class JaCoCoInteractorTest {
 
         HashMap<String, CodeCoverage> codeCoveragePerChangedFile;
         try {
-            JaCoCoInteractor jaCoCoInteractor = new JaCoCoInteractor(singleModuleFile, "target/classes", new String[]{"src/main/java"}, new File("../single-module-example/"));
+            JaCoCoInteractor jaCoCoInteractor = new JaCoCoInteractor(singleModuleFile, classPathDir, new String[]{"src/main/java"}, new File("../single-module-example/"));
             codeCoveragePerChangedFile = jaCoCoInteractor.getCodeCoverageForChangedLinesOfChangedFiles(result, changedLiensOverview);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -199,7 +201,7 @@ public class JaCoCoInteractorTest {
 
         HashMap<String, CodeCoverage> codeCoveragePerChangedFile;
         try {
-            JaCoCoInteractor jaCoCoInteractor = new JaCoCoInteractor(singleModuleFile, "target/classes", new String[]{"src/main/java"}, new File("../single-module-example/"));
+            JaCoCoInteractor jaCoCoInteractor = new JaCoCoInteractor(singleModuleFile, classPathDir, new String[]{"src/main/java"}, new File("../single-module-example/"));
             codeCoveragePerChangedFile = jaCoCoInteractor.getCodeCoverageForChangedLinesOfChangedFiles(result, getChangedLinesOverviewNotAll());
         } catch (IOException e) {
             throw new RuntimeException(e);

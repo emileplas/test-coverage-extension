@@ -1,0 +1,89 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.brabel.it</groupId>
+    <artifactId>changed-lines-per-class-failure</artifactId>
+    <version>1.0.0</version>
+
+    <description>IT that has a required overall coverage for the lines per changed class that is NOT met. Should fail.</description>
+
+    <build>
+        <plugins>
+
+            <!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.12</version>
+                <executions>
+                    <!-- Attaches the JaCoCo agent to the JVM -->
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+
+                    <!-- Generates code coverage reports in multiple formats -->
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/jacoco-report</outputDirectory>
+                            <formats>
+                                <format>HTML</format>
+                                <format>XML</format>
+                                <format>CSV</format>
+                            </formats>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <groupId>com.brabel</groupId>
+                <artifactId>test-coverage-extension-plugin</artifactId>
+                <version>1.0.0-ALPHA</version>
+                <configuration>
+                    <basedir>${project.basedir}</basedir>
+                    <classpath>${project.build.outputDirectory}</classpath>
+                    <sourcepaths>
+                        <sourcepath>src/main/java</sourcepath>
+                    </sourcepaths>
+                    <jacocoExecFile>${project.build.directory}/jacoco.exec</jacocoExecFile>
+                    <branchToCompare>empty-branch</branchToCompare>
+                    <rules>
+                        <rule>
+                            <type>PER_CLASS_CHANGED_LINES</type>
+                            <threshold>80</threshold>
+                        </rule>
+                    </rules>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.12.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
