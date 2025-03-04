@@ -35,10 +35,10 @@ public class CoverageCheckMojo extends AbstractMojo {
     @Parameter
     private List<String> sourcepaths;
 
-    @Parameter(defaultValue = "${project.build.directory}/jacoco.exec", alias = "jacoco.exec.file")
+    @Parameter(defaultValue = "${project.build.directory}/jacoco.exec", alias = "jacocoExecFile")
     private File jacocoExecFile;
 
-    @Parameter(defaultValue = "develop", alias = "branch.to.compare")
+    @Parameter(defaultValue = "develop", alias = "branchToCompare")
     private String branchToCompare;
 
     @Parameter

@@ -55,8 +55,8 @@
                     <sourcepaths>
                         <sourcepath>src/main/java</sourcepath>
                     </sourcepaths>
-                    <jacoco.exec.file>${project.build.directory}/jacoco.exec</jacoco.exec.file>
-                    <branch.to.compare>empty-branch</branch.to.compare>
+                    <jacocoExecFile>${project.build.directory}/jacoco.exec</jacocoExecFile>
+                    <branchToCompare>empty-branch</branchToCompare>
                     <rules>
                         <rule>
                             <type>PER_CLASS</type>
