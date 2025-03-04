@@ -45,14 +45,14 @@ public class CoverageCheckMojo extends AbstractMojo {
     private List<Rule> rules;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        getLog().info("Project Base Directory: " + basedir);
-        getLog().info("Classpath: " + classpath);
-        getLog().info("Source Paths: " + sourcepaths);
-        getLog().info("JaCoCo Execution File: " + jacocoExecFile);
-        getLog().info("Branch to Compare: " + branchToCompare);
+        getLog().debug("Project Base Directory: " + basedir);
+        getLog().debug("Classpath: " + classpath);
+        getLog().debug("Source Paths: " + sourcepaths);
+        getLog().debug("JaCoCo Execution File: " + jacocoExecFile);
+        getLog().debug("Branch to Compare: " + branchToCompare);
 
         for (Rule rule : rules) {
-            getLog().info("Rule Type: " + rule.getType() + ", Threshold: " + rule.getThreshold());
+            getLog().debug("Rule Type: " + rule.getType() + ", Threshold: " + rule.getThreshold());
         }
 
 
