@@ -97,9 +97,9 @@ public class CoverageCheckMojo extends AbstractMojo {
                 getLog().info(totalMessage.toString());
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new MojoExecutionException("Unable to generate code coverage: " + e);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new MojoExecutionException("Unable to generate code coverage: " + e);
         }
     }
 }
