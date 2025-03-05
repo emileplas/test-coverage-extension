@@ -142,7 +142,7 @@ public class JaCoCoInteractor {
      * Gets a code coverage overview based on the lines that were changed for the changed files
      * So if a file has 10 lines and 5 of those lines were changed, this method will return the coverage for those 5 lines.
      * The coverage will return a {@link CodeCoverage} object with the {@link CodeCoverage.CoverageType} set to {@link CodeCoverage.CoverageType#PER_CHANGED_LINE}
-     * It is important (!) to notice that this method will set the instructionsMissed and instructionsCovered of {@link CodeCoverage#} to -1. This method only focuses on the lines covered.
+     * It is important (!) to notice that this method will set the instructionsMissed and instructionsCovered of {@link CodeCoverage} to -1. This method only focuses on the lines covered.
      * This code coverage overview is more detailed than the {@link #getOverallCodeCoverageForChangedFiles(Set)} method.
      * @param changedFiles the changed files. Thise can be retrieved using the {@link GitInteractor#getOverviewOfChangedFiles(String)} method
      * @param changedLinesOverview the changed lines overview. This can be retrieved using the {@link GitInteractor#getChangedLines(String)} method
