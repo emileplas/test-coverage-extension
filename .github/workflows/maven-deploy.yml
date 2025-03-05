@@ -16,8 +16,8 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: maven
-          server-id: central # Value of the distributionManagement/repository/id field of the pom.xml
+          cache: 'maven'
+          server-id: 'central' # Value of the distributionManagement/repository/id field of the pom.xml
           server-username: ${{ secrets.REPO_USERNAME }} # env variable for username in deploy
           server-password: ${{ secrets.REPO_PASSWORD }} # env variable for token in deploy
       - name: Import GPG key
