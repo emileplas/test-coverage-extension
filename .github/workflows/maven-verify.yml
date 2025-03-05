@@ -17,17 +17,9 @@ jobs:
           cache: maven
       - name: Configure GPG Key
         run: |
-          # Create the .gnupg directory with secure permissions
           mkdir -p ~/.gnupg/
-          chmod 700 ~/.gnupg
-          
           printf "$GPG_SECRET_KEY" | base64 --decode > ~/.gnupg/private.key
-          chmod 600 ~/.gnupg/private.key
-          gpg --batch --import ~/.gnupg/private.key
-          
-          # Set correct permissions for GPG files
-          chmod 600 ~/.gnupg/*
-          chmod 700 ~/.gnupg
+          gpg --import ~/.gnupg/private.key
         env:
           GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
       - name: Run the Maven verify phase
