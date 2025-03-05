@@ -26,7 +26,7 @@
                 <artifactId>maven-plugin-plugin</artifactId>
                 <version>3.6.4</version>
                 <configuration>
-                    <goalPrefix>test-coverage-extension-plugin</goalPrefix>
+                    <goalPrefix>test-coverage-extension</goalPrefix>
                     <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
                 </configuration>
                 <executions>
