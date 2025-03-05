@@ -117,6 +117,68 @@ The plugin supports the following rule types:
 - **`TOTAL_CHANGED_LINES`**: The test coverage threshold for the changed lines in the entire project compared to the `branchToCompare`.
 - **`PER_CLASS_CHANGED_LINES`**: The test coverage threshold per changed line in a class compared to the `branchToCompare`.
 
+## Github actions
+
+To ensure that the plugin works properly in Github actions, it is important to set the fetch depth. 
+
+```yaml
+name: Maven verify
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Run the Maven verify phase
+        run: mvn --batch-mode --update-snapshots verify
+```
+
+Plugin:
+
+```xml
+<plugin>
+    <groupId>tech.linebyline</groupId>
+    <artifactId>test-coverage-extension-plugin</artifactId>
+    <version>1.0.0-ALPHA</version>
+    <configuration>
+        <basedir>${project.basedir}</basedir>
+        <classpath>${project.build.outputDirectory}</classpath>
+        <sourcepaths>
+            <sourcepath>src/main/java</sourcepath>
+        </sourcepaths>
+        <jacocoExecFile>${project.build.directory}/jacoco.exec</jacocoExecFile>
+        <branchToCompare>origin/empty-branch</branchToCompare>
+        <rules>
+            <rule>
+                <type>TOTAL_CHANGED_LINES</type>
+                <threshold>10</threshold>
+            </rule>
+        </rules>
+    </configuration>
+    <executions>
+        <execution>
+            <phase>prepare-package</phase>
+            <goals>
+                <goal>report</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+
+Also, referring to the branch as `origin/<branch name>` is important.
+
 ## Contributions
 
 We welcome contributions! Please review our [contributing guidelines](CONTRIBUTING.md) for more information.
