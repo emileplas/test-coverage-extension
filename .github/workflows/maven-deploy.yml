@@ -24,7 +24,7 @@ jobs:
         with:
           servers: |
             [{
-                "id": "sonatype-nexus-snapshots",
+                "id": "central",
                 "username": "${{ secrets.REPO_USERNAME }}",
                 "password": "${{ secrets.REPO_PASSWORD }}"
             }]
