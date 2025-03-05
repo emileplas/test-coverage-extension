@@ -1,8 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
-        <groupId>com.brabel</groupId>
+        <groupId>tech.linebyline</groupId>
         <artifactId>test-coverage-extension</artifactId>
         <version>1.0.0-ALPHA</version>
     </parent>
@@ -11,10 +12,8 @@
     <version>${plugin.version}</version>
     <packaging>maven-plugin</packaging>
 
-    <name>test-coverage-extension-plugin Maven Plugin</name>
-
-    <!-- FIXME change it to the project's website -->
-    <url>http://maven.apache.org</url>
+    <name>test-coverage-extension-plugin</name>
+    <description>Plugin for extending JaCoCo with git.</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,7 +26,7 @@
                 <artifactId>maven-plugin-plugin</artifactId>
                 <version>3.6.4</version>
                 <configuration>
-                    <goalPrefix>test-coverage-extension-plugin</goalPrefix>
+                    <goalPrefix>test-coverage-extension</goalPrefix>
                     <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
                 </configuration>
                 <executions>
@@ -87,7 +86,7 @@
                             <configuration>
                                 <artifactSet>
                                     <includes>
-                                        <include>com.brabel:coverage.extension.core</include>
+                                        <include>tech.linebyline:test-coverage-extension-core</include>
                                         <include>org.jacoco:org.jacoco.core</include>
                                     </includes>
                                 </artifactSet>
@@ -100,46 +99,6 @@
 
         </plugins>
     </build>
-    <!--<profiles>
-        <profile>
-            <id>run-its</id>
-            <build>
-
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-invoker-plugin</artifactId>
-                        <version>1.7</version>
-                        <configuration>
-                            <debug>true</debug>
-                            <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
-                            <pomIncludes>
-                                <pomInclude>*/pom.xml</pomInclude>
-                            </pomIncludes>
-                            <postBuildHookScript>verify</postBuildHookScript>
-                            <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
-                            <settingsFile>src/it/settings.xml</settingsFile>
-                            <goals>
-                                <goal>clean</goal>
-                                <goal>test-compile</goal>
-                            </goals>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>integration-test</id>
-                                <goals>
-                                    <goal>install</goal>
-                                    <goal>integration-test</goal>
-                                    <goal>verify</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-
-            </build>
-        </profile>
-    </profiles>-->
 
     <dependencies>
 
@@ -163,8 +122,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.brabel</groupId>
-            <artifactId>coverage.extension.core</artifactId>
+            <groupId>tech.linebyline</groupId>
+            <artifactId>test-coverage-extension-core</artifactId>
             <version>1.0.0-ALPHA</version>
         </dependency>
 

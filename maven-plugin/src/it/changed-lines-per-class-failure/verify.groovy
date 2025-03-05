@@ -25,9 +25,11 @@ expectedMessage.append("[ERROR] None")
 
 // Check for the expected failure message in the build log
 def logContent = buildLog.text
+
 if (!logContent.contains(expectedMessage.toString())) {
     print expectedMessage.toString()
-    throw new RuntimeException("Expected failure message not found in the build log!")
+    throw new RuntimeException("Expected failure message not found in the build log!\n " + logContent)
+
 }
 
 println "Integration test passed: Build failed as expected with the correct message."

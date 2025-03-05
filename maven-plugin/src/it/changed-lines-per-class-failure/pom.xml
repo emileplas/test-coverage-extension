@@ -46,7 +46,7 @@
 
 
             <plugin>
-                <groupId>com.brabel</groupId>
+                <groupId>tech.linebyline</groupId>
                 <artifactId>test-coverage-extension-plugin</artifactId>
                 <version>1.0.0-ALPHA</version>
                 <configuration>
@@ -56,7 +56,7 @@
                         <sourcepath>src/main/java</sourcepath>
                     </sourcepaths>
                     <jacocoExecFile>${project.build.directory}/jacoco.exec</jacocoExecFile>
-                    <branchToCompare>empty-branch</branchToCompare>
+                    <branchToCompare>origin/empty-branch</branchToCompare>
                     <rules>
                         <rule>
                             <type>PER_CLASS_CHANGED_LINES</type>
