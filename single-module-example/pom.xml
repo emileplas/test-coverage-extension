@@ -9,7 +9,7 @@
         <version>1.0.0-ALPHA</version>
     </parent>
 
-
+    <groupId>com.brabel</groupId>
     <artifactId>single-module-example</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>Archetype - single-module-example</name>
