@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.brabel</groupId>
+        <groupId>tech.linebyline</groupId>
         <artifactId>test-coverage-extension</artifactId>
         <version>1.0.0-ALPHA</version>
     </parent>

@@ -85,7 +85,7 @@
                             <configuration>
                                 <artifactSet>
                                     <includes>
-                                        <include>com.brabel:test-coverage-extension-core</include>
+                                        <include>tech.linebyline:test-coverage-extension-core</include>
                                         <include>org.jacoco:org.jacoco.core</include>
                                     </includes>
                                 </artifactSet>
@@ -121,7 +121,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.brabel</groupId>
+            <groupId>tech.linebyline</groupId>
             <artifactId>test-coverage-extension-core</artifactId>
             <version>1.0.0-ALPHA</version>
         </dependency>

@@ -59,7 +59,7 @@ To integrate the **Test Coverage Extension Plugin** into your project, add the f
 
 ```xml
 <plugin>
-    <groupId>com.brabel</groupId>
+    <groupId>tech.linebyline</groupId>
     <artifactId>test-coverage-extension-plugin</artifactId>
     <version>1.0.0-ALPHA</version>
     <configuration>
