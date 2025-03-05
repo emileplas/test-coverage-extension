@@ -133,6 +133,10 @@ mvn clean install
 
 This will compile the project and execute all tests.
 
+#### GPG Setup
+
+The building will fail locally if GPG is not set up.
+
 ### Branching Strategy
 
 We follow the [Gitflow branching model](https://nvie.com/posts/a-successful-git-branching-model/) for this project:
