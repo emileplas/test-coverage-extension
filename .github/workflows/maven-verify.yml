@@ -15,5 +15,15 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+      - name: Set up GPG
+        id: gpg
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_SIGN_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          echo "$GPG_PRIVATE_KEY" > private-key.asc
+          gpg --batch --import private-key.asc
+          echo "GPG_KEY_ID=$(gpg --list-secret-keys --keyid-format LONG | grep sec | awk '{print $2}' | cut -d'/' -f2)" >> $GITHUB_ENV
+          rm private-key.asc
       - name: Run the Maven verify phase
         run: mvn --batch-mode --update-snapshots verify
