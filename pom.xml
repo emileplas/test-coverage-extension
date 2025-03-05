@@ -124,6 +124,7 @@
                     <excludeArtifacts>
                         <excludeArtifact>single-module-example</excludeArtifact>
                     </excludeArtifacts>
+                    <deploymentName>test-coverage-extension</deploymentName>
                 </configuration>
             </plugin>
 
