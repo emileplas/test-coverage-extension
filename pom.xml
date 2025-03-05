@@ -8,6 +8,12 @@
     <artifactId>test-coverage-extension</artifactId>
     <version>1.0.0-ALPHA</version>
     <packaging>pom</packaging>
+
+    <name>test-coverage-extension:${version}</name>
+
+    <description>Test coverage extension for JaCoCo</description>
+    <url>https://github.com/emileplas/test-coverage-extension</url>
+
     <modules>
         <module>core</module>
         <module>single-module-example</module>
@@ -25,6 +31,28 @@
         <plugin.version>1.0.0-ALPHA</plugin.version>
     </properties>
 
+    <scm>
+        <connection>scm:git:https://github.com/emileplas/test-coverage-extension.git</connection>
+        <developerConnection>scm:git:https://github.com/emileplas/test-coverage-extension.git</developerConnection>
+        <url>https://github.com/emileplas/test-coverage-extension</url>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Emile Plas</name>
+            <email>emile.plas@linebyline.tech</email>
+            <organizationUrl>https://github.com/emileplas</organizationUrl>
+        </developer>
+    </developers>
+
     <build>
         <pluginManagement>
             <plugins>
@@ -36,6 +64,55 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.11.2</version>
+                <configuration>
+                    <doclint>all,-missing</doclint>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.2.7</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
     <dependencyManagement>

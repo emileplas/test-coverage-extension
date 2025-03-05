@@ -11,10 +11,8 @@
     <version>${plugin.version}</version>
     <packaging>maven-plugin</packaging>
 
-    <name>test-coverage-extension-plugin Maven Plugin</name>
-
-    <!-- FIXME change it to the project's website -->
-    <url>http://maven.apache.org</url>
+    <name>test-coverage-extension-plugin</name>
+    <description>Plugin for extending JaCoCo with git.</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -87,7 +85,7 @@
                             <configuration>
                                 <artifactSet>
                                     <includes>
-                                        <include>com.brabel:coverage.extension.core</include>
+                                        <include>com.brabel:test-coverage-extension-core</include>
                                         <include>org.jacoco:org.jacoco.core</include>
                                     </includes>
                                 </artifactSet>
@@ -100,46 +98,6 @@
 
         </plugins>
     </build>
-    <!--<profiles>
-        <profile>
-            <id>run-its</id>
-            <build>
-
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-invoker-plugin</artifactId>
-                        <version>1.7</version>
-                        <configuration>
-                            <debug>true</debug>
-                            <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
-                            <pomIncludes>
-                                <pomInclude>*/pom.xml</pomInclude>
-                            </pomIncludes>
-                            <postBuildHookScript>verify</postBuildHookScript>
-                            <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
-                            <settingsFile>src/it/settings.xml</settingsFile>
-                            <goals>
-                                <goal>clean</goal>
-                                <goal>test-compile</goal>
-                            </goals>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>integration-test</id>
-                                <goals>
-                                    <goal>install</goal>
-                                    <goal>integration-test</goal>
-                                    <goal>verify</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-
-            </build>
-        </profile>
-    </profiles>-->
 
     <dependencies>
 
@@ -164,7 +122,7 @@
 
         <dependency>
             <groupId>com.brabel</groupId>
-            <artifactId>coverage.extension.core</artifactId>
+            <artifactId>test-coverage-extension-core</artifactId>
             <version>1.0.0-ALPHA</version>
         </dependency>
 

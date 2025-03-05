@@ -1,15 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>com.brabel</groupId>
         <artifactId>test-coverage-extension</artifactId>
         <version>1.0.0-ALPHA</version>
     </parent>
-    <artifactId>coverage.extension.core</artifactId>
-    <name>coverage.extension.core</name>
+
+    <artifactId>test-coverage-extension-core</artifactId>
+    <name>test-coverage-extension-core</name>
     <version>${core.version}</version>
-    <url>http://maven.apache.org</url>
+
+    <description>Core test coverage extension for JaCoCo. Containing logic for the plugin.</description>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.jacoco/org.jacoco.core -->
