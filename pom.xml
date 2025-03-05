@@ -97,9 +97,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <signer>bc</signer>
-                </configuration>
             </plugin>
 
             <plugin>
