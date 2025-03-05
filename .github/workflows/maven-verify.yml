@@ -15,12 +15,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-      - name: Configure GPG Key
-        run: |
-          mkdir -p ~/.gnupg/
-          printf "$GPG_SECRET_KEY" | base64 --decode > ~/.gnupg/private.key
-          gpg --import ~/.gnupg/private.key
-        env:
-          GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_SIGN_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
       - name: Run the Maven verify phase
         run: mvn --batch-mode --update-snapshots verify
