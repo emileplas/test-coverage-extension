@@ -15,12 +15,24 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-      - name: Configure GPG Key
-        run: |
-          mkdir -p ~/.gnupg/
-          printf "$GPG_SECRET_KEY" | base64 --decode > ~/.gnupg/private.key
-          gpg --import ~/.gnupg/private.key
+      - name: Set up GPG
         env:
-          GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          # Create the .gnupg directory
+          mkdir -p ~/.gnupg/
+          chmod 700 ~/.gnupg
+
+          # Import the GPG private key
+          echo "$GPG_PRIVATE_KEY" | base64 --decode | gpg --batch --import
+
+          # Configure GPG to use the passphrase non-interactively
+          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+          echo "$GPG_PASSPHRASE" | gpg --batch --pinentry-mode loopback --passphrase-fd 0 --import ~/.gnupg/private.key
+
+          # Reload the GPG agent
+          gpg-connect-agent reloadagent /bye
       - name: Run the Maven verify phase
         run: mvn --batch-mode --update-snapshots verify
