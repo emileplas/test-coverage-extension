@@ -9,7 +9,7 @@
     <version>1.0.0-ALPHA</version>
     <packaging>pom</packaging>
 
-    <name>test-coverage-extension:${version}</name>
+    <name>test-coverage-extension</name>
 
     <description>Test coverage extension for JaCoCo</description>
     <url>https://github.com/emileplas/test-coverage-extension</url>
