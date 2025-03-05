@@ -28,8 +28,7 @@ def logContent = buildLog.text
 
 if (!logContent.contains(expectedMessage.toString())) {
     print expectedMessage.toString()
-    print logContent
-    throw new RuntimeException("Expected failure message not found in the build log!")
+    throw new RuntimeException("Expected failure message not found in the build log!\n " + logContent)
 
 }
 
