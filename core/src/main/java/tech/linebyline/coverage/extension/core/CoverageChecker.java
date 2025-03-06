@@ -110,6 +110,12 @@ public class CoverageChecker {
             setTotalCodeCoverageOfChangedLines(jaCoCoInteractor.getCodeCoverageForChangedLinesOfChangedFiles(getChangedFiles(), getChangedLines()));
         }
 
+        if(getChangedFiles().size() == 0){
+            return new RuleValidationResult(true, "No changed files found. No coverage to check.");
+        }else if(getTotalCodeCoverageOfChangedLines().size() == 0){
+            return new RuleValidationResult(true, "No changed lines found. No coverage to check.");
+        }
+
         boolean success = true;
 
         int totalLinesCovered = 0;
@@ -181,6 +187,12 @@ public class CoverageChecker {
             setTotalCodeCoverageOfChangedLines(jaCoCoInteractor.getCodeCoverageForChangedLinesOfChangedFiles(getChangedFiles(), getChangedLines()));
         }
 
+        if(getChangedFiles().size() == 0) {
+            return new RuleValidationResult(true, "No changed files found. No coverage to check.");
+        }else if(getTotalCodeCoverageOfChangedLines().size() == 0){
+            return new RuleValidationResult(true, "No changed lines found. No coverage to check.");
+        }
+
 
         boolean success = true;
 
@@ -190,7 +202,7 @@ public class CoverageChecker {
         for(String className : getTotalCodeCoverageOfChangedLines().keySet()){
             CodeCoverage codeCoverage = getTotalCodeCoverageOfChangedLines().get(className);
             int totalLines = codeCoverage.getLinesCovered() + codeCoverage.getLinesMissed();
-            double coverage = (double) codeCoverage.getLinesCovered() / totalLines * 100;
+            Double coverage = Double.valueOf((double) codeCoverage.getLinesCovered() / totalLines * 100);
             if(coverage < rule.getThreshold()){
                 success = false;
                 insufficientCoverage.put(className, coverage);
@@ -235,6 +247,12 @@ public class CoverageChecker {
         if(getChangedFiles() == null){
             setChangedFiles(getOverviewOfChangedFiles(branchToCompare));
         }
+
+        if(getChangedFiles().size() == 0){
+            return new RuleValidationResult(true, "No changed files found. No coverage to check.");
+        }
+
+
         HashMap<String, CodeCoverage> overallClassCodeCoverage = jaCoCoInteractor.getOverallCodeCoverageForChangedFiles(getChangedFiles());
 
         boolean success = true;
@@ -247,7 +265,7 @@ public class CoverageChecker {
         for(String className : overallClassCodeCoverage.keySet()){
             CodeCoverage codeCoverage = overallClassCodeCoverage.get(className);
             int totalLines = codeCoverage.getLinesCovered() + codeCoverage.getLinesMissed();
-            double coverage = (double) codeCoverage.getLinesCovered() / totalLines * 100;
+            Double coverage = Double.valueOf((double) codeCoverage.getLinesCovered() / totalLines * 100);
             if(coverage < rule.getThreshold()){
                 success = false;
                 insufficientCoverage.put(className, coverage);
