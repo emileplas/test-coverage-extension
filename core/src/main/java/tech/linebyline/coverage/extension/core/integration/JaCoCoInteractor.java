@@ -105,6 +105,10 @@ public class JaCoCoInteractor {
         //create a map to store the code coverage per file
         HashMap<String, CodeCoverage> codeCoveragePerFile = new HashMap<>(changedFiles.size());
 
+        if(changedFiles.size() == 0){
+            return codeCoveragePerFile;
+        }
+
         // Collect coverage data
         //TODO: improve performance.
         for (String sourceRoot : getSourceCodePaths()) {
@@ -162,6 +166,10 @@ public class JaCoCoInteractor {
                     if (sourceFile.exists()) {
                         int[] changedLinesOfFile = getLinesForPath(classCoverage.getName(), changedLinesOverview);
 
+                        if(changedLinesOfFile.length == 0){
+                            continue;
+                        }
+
                         int totalLinesThatAreCovered = 0;
                         int totalLinesThatAreNotCovered = 0;
 
@@ -214,7 +222,7 @@ public class JaCoCoInteractor {
                 return entry.getValue();
             }
         }
-        return null;
+        return new int[0];
     }
 
     /**

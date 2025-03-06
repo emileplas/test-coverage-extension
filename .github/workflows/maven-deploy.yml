@@ -1,4 +1,4 @@
-name: Maven verify
+name: Maven deploy
 
 on:
   release:
@@ -10,16 +10,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: maven
-          server-id: central # Value of the distributionManagement/repository/id field of the pom.xml
+          cache: 'maven'
+          server-id: 'central' # Value of the distributionManagement/repository/id field of the pom.xml
           server-username: ${{ secrets.REPO_USERNAME }} # env variable for username in deploy
           server-password: ${{ secrets.REPO_PASSWORD }} # env variable for token in deploy
+      - uses: s4u/maven-settings-action@v3.1.0
+        with:
+          servers: |
+            [{
+                "id": "central",
+                "username": "${{ secrets.REPO_USERNAME }}",
+                "password": "${{ secrets.REPO_PASSWORD }}"
+            }]
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v6
         with:
