@@ -61,7 +61,7 @@ To integrate the **Test Coverage Extension Plugin** into your project, add the f
 <plugin>
     <groupId>tech.linebyline</groupId>
     <artifactId>test-coverage-extension-plugin</artifactId>
-    <version>1.0.0-ALPHA</version>
+    <version>1.0.1-ALPHA</version>
     <configuration>
         <basedir>${project.basedir}</basedir>
         <classpath>${project.build.outputDirectory}</classpath>
@@ -149,7 +149,7 @@ Plugin:
 <plugin>
     <groupId>tech.linebyline</groupId>
     <artifactId>test-coverage-extension-plugin</artifactId>
-    <version>1.0.0-ALPHA</version>
+    <version>1.0.1-ALPHA</version>
     <configuration>
         <basedir>${project.basedir}</basedir>
         <classpath>${project.build.outputDirectory}</classpath>
