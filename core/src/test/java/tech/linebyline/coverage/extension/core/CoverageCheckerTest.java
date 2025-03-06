@@ -279,5 +279,51 @@ public class CoverageCheckerTest {
 
     }
 
+    @Test
+    public void testChangedLinesOverallSuccessNoChangedFiles() throws IOException, InterruptedException {
+        RuleManager ruleManager = new RuleManager();
+
+        Rule classChangedLineRule = new Rule(Rule.RuleType.TOTAL_CHANGED_LINES, 40);
+        ruleManager.addRule(classChangedLineRule);
+
+        CoverageChecker coverageChecker = new CoverageChecker(ruleManager, getConfigurationManager());
+        coverageChecker.setChangedFiles(new HashSet<>());
+        coverageChecker.setChangedLines(new HashMap<>());
+
+        HashMap<Rule, RuleValidationResult> ruleRuleValidationResultHashMap = coverageChecker.runChecks();
+
+        Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
+
+        String expectedMessage = "No changed files found. No coverage to check.";
+
+        RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(classChangedLineRule);
+        Assertions.assertTrue(ruleValidationResult.isSuccessful());
+        Assertions.assertEquals(expectedMessage, ruleValidationResult.getMessage());
+
+    }
+
+    @Test
+    public void testChangedLinesOverallSuccessNoChangedLines() throws IOException, InterruptedException {
+        RuleManager ruleManager = new RuleManager();
+
+        Rule classChangedLineRule = new Rule(Rule.RuleType.TOTAL_CHANGED_LINES, 40);
+        ruleManager.addRule(classChangedLineRule);
+
+        CoverageChecker coverageChecker = new CoverageChecker(ruleManager, getConfigurationManager());
+        coverageChecker.setChangedFiles(getSampleChangedFiles());
+        coverageChecker.setChangedLines(new HashMap<>());
+
+        HashMap<Rule, RuleValidationResult> ruleRuleValidationResultHashMap = coverageChecker.runChecks();
+
+        Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
+
+        String expectedMessage = "No changed lines found. No coverage to check.";
+
+        RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(classChangedLineRule);
+        Assertions.assertTrue(ruleValidationResult.isSuccessful());
+        Assertions.assertEquals(expectedMessage, ruleValidationResult.getMessage());
+
+    }
+
 
 }
