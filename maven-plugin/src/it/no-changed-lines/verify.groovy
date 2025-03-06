@@ -6,7 +6,7 @@ if (!buildLog.exists()) {
 
 // Check for the expected failure message in the build log
 def logContent = buildLog.text
-if (!logContent.contains("The overall coverage of the changed lines is above the required percentage. Required: 10.00% Actual: 42.86%")) {
+if (!logContent.contains("No changed lines found. No coverage to check.")) {
     throw new RuntimeException("Expected success message not found in the build log!")
 }
 

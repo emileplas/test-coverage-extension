@@ -56,7 +56,7 @@
                         <sourcepath>src/main/java</sourcepath>
                     </sourcepaths>
                     <jacocoExecFile>${project.build.directory}/jacoco.exec</jacocoExecFile>
-                    <branchToCompare>origin/empty-branch</branchToCompare>
+                    <branchToCompare>origin/branch-with-content</branchToCompare>
                     <rules>
                         <rule>
                             <type>TOTAL_CHANGED_LINES</type>
