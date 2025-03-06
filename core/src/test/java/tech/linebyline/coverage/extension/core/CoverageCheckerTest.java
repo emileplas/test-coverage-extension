@@ -371,5 +371,29 @@ public class CoverageCheckerTest {
 
     }
 
+    @Test
+    public void testPerClassSuccessNoChangedFiles() throws IOException, InterruptedException {
+        RuleManager ruleManager = new RuleManager();
+
+        Rule classChangedLineRule = new Rule(Rule.RuleType.PER_CLASS, 40);
+        ruleManager.addRule(classChangedLineRule);
+
+        CoverageChecker coverageChecker = new CoverageChecker(ruleManager, getConfigurationManager());
+        coverageChecker.setChangedFiles(new HashSet<>());
+        coverageChecker.setChangedLines(new HashMap<>());
+
+        HashMap<Rule, RuleValidationResult> ruleRuleValidationResultHashMap = coverageChecker.runChecks();
+
+        Assertions.assertEquals(1, ruleRuleValidationResultHashMap.size());
+
+        String expectedMessage = "No changed files found. No coverage to check.";
+
+        RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(classChangedLineRule);
+        Assertions.assertTrue(ruleValidationResult.isSuccessful());
+        Assertions.assertEquals(expectedMessage, ruleValidationResult.getMessage());
+
+    }
+
+
 
 }
