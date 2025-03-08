@@ -61,7 +61,7 @@ To integrate the **Test Coverage Extension Plugin** into your project, add the f
 <plugin>
     <groupId>tech.linebyline</groupId>
     <artifactId>test-coverage-extension-plugin</artifactId>
-    <version>1.0.1-ALPHA</version>
+    <version>1.0.2-ALPHA</version>
     <configuration>
         <basedir>${project.basedir}</basedir>
         <classpath>${project.build.outputDirectory}</classpath>
@@ -98,15 +98,16 @@ The plugin will evaluate test coverage based on the configured rules. If the cov
 
 The plugin supports the following configuration parameters:
 
-| **Parameter**       | **Description**                                                                 | **Default Value**                                |
-|---------------------|---------------------------------------------------------------------------------|-------------------------------------------------|
-| `project`           | The Maven project object, injected by Maven.                                   | `${project}` (read-only, required)              |
-| `basedir`           | The base directory of the project.                                              | `${project.basedir}` (read-only)                |
-| `classpath`         | The output directory for compiled classes.                                      | `${project.build.outputDirectory}`              |
-| `sourcepaths`       | A list of source paths to be analyzed.                                          | (No default value)                              |
-| `jacocoExecFile`    | The path to the JaCoCo execution data file.                                     | `${project.build.directory}/jacoco.exec`        |
-| `branchToCompare`   | The branch to compare for code coverage analysis.                               | `develop`                                       |
-| `rules`             | A list of rules defining thresholds for code coverage validation.               | (No default value)                              |
+| **Parameter**     | **Description**                                                                                                   | **Default Value**                        |
+|-------------------|-------------------------------------------------------------------------------------------------------------------|------------------------------------------|
+| `project`         | The Maven project object, injected by Maven.                                                                      | `${project}` (read-only, required)       |
+| `basedir`         | The base directory of the project.                                                                                | `${project.basedir}` (read-only)         |
+| `classpath`       | The output directory for compiled classes.                                                                        | `${project.build.outputDirectory}`       |
+| `sourcepaths`     | A list of source paths to be analyzed.                                                                            | (No default value)                       |
+| `jacocoExecFile`  | The path to the JaCoCo execution data file.                                                                       | `${project.build.directory}/jacoco.exec` |
+| `branchToCompare` | The branch to compare for code coverage analysis.                                                                 | `develop`                                |
+| `rules`           | A list of rules defining thresholds for code coverage validation.                                                 | (No default value)                       |
+| `failOnError`     | Whether the validation result will indicate failure in case something goes wrong while creating the code coverage | false                                    |
 
 ### Rule Types
 
@@ -149,7 +150,7 @@ Plugin:
 <plugin>
     <groupId>tech.linebyline</groupId>
     <artifactId>test-coverage-extension-plugin</artifactId>
-    <version>1.0.1-ALPHA</version>
+    <version>1.0.2-ALPHA</version>
     <configuration>
         <basedir>${project.basedir}</basedir>
         <classpath>${project.build.outputDirectory}</classpath>
