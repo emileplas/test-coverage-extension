@@ -43,12 +43,16 @@ public class CoverageCheckMojo extends AbstractMojo {
     @Parameter
     private List<Rule> rules;
 
+    @Parameter(defaultValue = "false", alias = "failOnError")
+    private boolean failOnError = false;
+
     public void execute() throws MojoExecutionException, MojoFailureException {
         getLog().debug("Project Base Directory: " + basedir);
         getLog().debug("Classpath: " + classpath);
         getLog().debug("Source Paths: " + sourcepaths);
         getLog().debug("JaCoCo Execution File: " + jacocoExecFile);
         getLog().debug("Branch to Compare: " + branchToCompare);
+        getLog().debug("Fail on Error: " + failOnError);
 
         for (Rule rule : rules) {
             getLog().debug("Rule Type: " + rule.getType() + ", Threshold: " + rule.getThreshold());
@@ -62,7 +66,7 @@ public class CoverageCheckMojo extends AbstractMojo {
         configurationManager.setJacocoExecFile(jacocoExecFile);
         configurationManager.setBranchToCompare(branchToCompare);
         configurationManager.setProjectBaseDir(project.getBasedir());
-
+        configurationManager.setFailOnError(failOnError);
 
         RuleManager ruleManager = new RuleManager();
         ruleManager.setRules(rules);
@@ -78,7 +82,6 @@ public class CoverageCheckMojo extends AbstractMojo {
 
             boolean isFailed = false;
 
-
             for (Rule rule : ruleRuleValidationResultHashMap.keySet()) {
                 RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(rule);
                 if(!ruleValidationResult.isSuccessful()){
@@ -93,7 +96,10 @@ public class CoverageCheckMojo extends AbstractMojo {
             if(isFailed){
                 throw new MojoFailureException(totalMessage.toString());
             }else{
-                getLog().info(totalMessage.toString());
+                String[] lines = totalMessage.toString().split("\n");
+                for (String line : lines) {
+                    getLog().info(line);
+                }
             }
         } catch (IOException e) {
             throw new MojoExecutionException("Unable to generate code coverage: " + e);
