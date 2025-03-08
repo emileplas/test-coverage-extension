@@ -69,7 +69,7 @@ public class CoverageChecker {
         return ruleValidationResults;
     }
 
-    HashMap<String, int[]> changedLines = null;
+    private HashMap<String, int[]> changedLines = null;
 
     private HashMap<String, int[]> getChangedLines(){
         return changedLines;
@@ -115,9 +115,7 @@ public class CoverageChecker {
         }else if(getTotalCodeCoverageOfChangedLines().size() == 0){
             return new RuleValidationResult(true, "No changed lines found. No coverage to check.");
         }
-
-        boolean success = true;
-
+        
         int totalLinesCovered = 0;
         int totalLinesMissed = 0;
 
