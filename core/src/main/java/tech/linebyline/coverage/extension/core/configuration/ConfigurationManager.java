@@ -101,5 +101,15 @@ public class ConfigurationManager {
         return branchToCompare;
     }
 
+    boolean failOnError = false;
+
+    public void setFailOnError(boolean failOnError) {
+        this.failOnError = failOnError;
+    }
+
+    public boolean getFailOnError() {
+        return failOnError;
+    }
+
 
 }
