@@ -115,7 +115,7 @@ public class CoverageChecker {
         }else if(getTotalCodeCoverageOfChangedLines().size() == 0){
             return new RuleValidationResult(true, "No changed lines found. No coverage to check.");
         }
-        
+
         int totalLinesCovered = 0;
         int totalLinesMissed = 0;
 
@@ -129,7 +129,7 @@ public class CoverageChecker {
         try{
             coverage = calculateCoverage(totalLinesCovered, totalLinesMissed);
         } catch (IllegalArgumentException e) {
-            return new RuleValidationResult(!getConfigurationManager().getFailOnError(), "Unable to calculate the coverage of the changed lines because input was negative.");
+            return new RuleValidationResult(!getConfigurationManager().getFailOnError(), "Unable to calculate the coverage of the changed lines: " + e.getMessage());
         }
 
 
@@ -151,8 +151,10 @@ public class CoverageChecker {
     public static double calculateCoverage(int linesCovered, int linesMissed) throws IllegalArgumentException {
         if(linesCovered == 0 && linesMissed == 0){
             return 100;
-        }else if(linesCovered < 0 || linesMissed < 0){
-            throw new IllegalArgumentException("Lines covered or lines missed cannot be negative.");
+        }else if(linesCovered < 0) {
+            throw new IllegalArgumentException("Lines covered can not be negative.");
+        }else if(linesMissed < 0){
+            throw new IllegalArgumentException("Lines missed can not be negative.");
         }else {
             int totalLines = linesCovered + linesMissed;
             return (double) linesCovered / totalLines * 100;
@@ -228,7 +230,7 @@ public class CoverageChecker {
             try{
                 coverage = calculateCoverage(codeCoverage.getLinesCovered(), codeCoverage.getLinesMissed());
             } catch (IllegalArgumentException e) {
-                errorCoverage.put(className, "Unable to calculate the coverage of the changed lines because input was negative.");
+                errorCoverage.put(className, "Unable to calculate the coverage of the changed lines: " + e.getMessage());
                 continue;
             }
 
@@ -314,7 +316,7 @@ public class CoverageChecker {
             try{
                 coverage = calculateCoverage(codeCoverage.getLinesCovered(), codeCoverage.getLinesMissed());
             } catch (IllegalArgumentException e) {
-                errorCoverage.put(className, "Unable to calculate the coverage of the changed lines because input was negative.");
+                errorCoverage.put(className, "Unable to calculate the coverage of the changed lines: " + e.getMessage());
                 continue;
             }
 

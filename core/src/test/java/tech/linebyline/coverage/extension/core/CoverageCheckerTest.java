@@ -439,11 +439,22 @@ public class CoverageCheckerTest {
     }
 
     @Test
-    public void testCalculateCoverageNegative(){
+    public void testCalculateCoverageNegativeLinesCovered(){
         try{
             double coverage = calculateCoverage(-10, 10);
         } catch (Exception e) {
             Assertions.assertTrue(e instanceof IllegalArgumentException);
+            Assertions.assertEquals("Lines covered can not be negative.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testCalculateCoverageNegativeLinesMissed(){
+        try{
+            double coverage = calculateCoverage(10, -10);
+        } catch (Exception e) {
+            Assertions.assertTrue(e instanceof IllegalArgumentException);
+            Assertions.assertEquals("Lines missed can not be negative.", e.getMessage());
         }
     }
 
@@ -455,27 +466,21 @@ public class CoverageCheckerTest {
         Rule classChangedLineRule = new Rule(Rule.RuleType.PER_CLASS, 40);
         ruleManager.addRule(classChangedLineRule);
 
-        // Create an instance of CoverageChecker
         CoverageChecker coverageChecker = new CoverageChecker(ruleManager, getConfigurationManager());
 
-        // Mock the static method calculateCoverage
         try (MockedStatic<CoverageChecker> mock = Mockito.mockStatic(CoverageChecker.class)) {
-            // Stub the static method to throw an IllegalArgumentException
             mock.when(() -> CoverageChecker.calculateCoverage(anyInt(), anyInt()))
-                    .thenThrow(new IllegalArgumentException("Test exception"));
+                    .thenThrow(new IllegalArgumentException("TEST EXCEPTION"));
 
-            // Perform your test within the try block
             HashMap<Rule, RuleValidationResult> ruleRuleValidationResultHashMap = coverageChecker.runChecks();
 
-            // Add assertions to verify the behavior
-            // For example, check that the result contains the expected error
             Assertions.assertTrue(ruleRuleValidationResultHashMap.values().stream()
                     .anyMatch(result -> {
                         return result.isSuccessful() &&
                                 result.getMessage().contains("All the changed classes meet the required coverage of 40.00% per class.") &&
                                 result.getMessage().contains("The following classes had an error while calculating the coverage: ") &&
-                                result.getMessage().contains("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with the following error: Unable to calculate the coverage of the changed lines because input was negative.") &&
-                                result.getMessage().contains("./single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with the following error: Unable to calculate the coverage of the changed lines because input was negative.");
+                                result.getMessage().contains("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with the following error: Unable to calculate the coverage of the changed lines: TEST EXCEPTION") &&
+                                result.getMessage().contains("./single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with the following error: Unable to calculate the coverage of the changed lines: TEST EXCEPTION");
                     }
                     ));
         } catch (IOException e) {
@@ -496,28 +501,21 @@ public class CoverageCheckerTest {
         ConfigurationManager configurationManager = getConfigurationManager();
         configurationManager.setFailOnError(true);
 
-        // Create an instance of CoverageChecker
         CoverageChecker coverageChecker = new CoverageChecker(ruleManager, configurationManager);
 
-        // Mock the static method calculateCoverage
         try (MockedStatic<CoverageChecker> mock = Mockito.mockStatic(CoverageChecker.class)) {
-            // Stub the static method to throw an IllegalArgumentException
             mock.when(() -> CoverageChecker.calculateCoverage(anyInt(), anyInt()))
-                    .thenThrow(new IllegalArgumentException("Test exception"));
+                    .thenThrow(new IllegalArgumentException("TEST EXCEPTION"));
 
-            // Perform your test within the try block
             HashMap<Rule, RuleValidationResult> ruleRuleValidationResultHashMap = coverageChecker.runChecks();
 
-            // Add assertions to verify the behavior
-            // For example, check that the result contains the expected error
             Assertions.assertTrue(ruleRuleValidationResultHashMap.values().stream()
                     .anyMatch(result -> {
-                        //since fail on error is set to true the validation result will be false for isSuccessful()
                                 return !result.isSuccessful() &&
                                         result.getMessage().contains("All the changed classes meet the required coverage of 40.00% per class.") &&
                                         result.getMessage().contains("The following classes had an error while calculating the coverage:") &&
-                                        result.getMessage().contains("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with the following error: Unable to calculate the coverage of the changed lines because input was negative.") &&
-                                        result.getMessage().contains("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with the following error: Unable to calculate the coverage of the changed lines because input was negative.");
+                                        result.getMessage().contains("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with the following error: Unable to calculate the coverage of the changed lines: TEST EXCEPTION") &&
+                                        result.getMessage().contains("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with the following error: Unable to calculate the coverage of the changed lines: TEST EXCEPTION");
                             }
                     ));
         } catch (IOException e) {
@@ -535,20 +533,14 @@ public class CoverageCheckerTest {
         Rule classChangedLineRule = new Rule(Rule.RuleType.OVERALL, 40);
         ruleManager.addRule(classChangedLineRule);
 
-        // Create an instance of CoverageChecker
         CoverageChecker coverageChecker = new CoverageChecker(ruleManager, getConfigurationManager());
 
-        // Mock the static method calculateCoverage
         try (MockedStatic<CoverageChecker> mock = Mockito.mockStatic(CoverageChecker.class)) {
-            // Stub the static method to throw an IllegalArgumentException
             mock.when(() -> CoverageChecker.calculateCoverage(anyInt(), anyInt()))
                     .thenThrow(new IllegalArgumentException("Test exception"));
 
-            // Perform your test within the try block
             HashMap<Rule, RuleValidationResult> ruleRuleValidationResultHashMap = coverageChecker.runChecks();
 
-            // Add assertions to verify the behavior
-            // For example, check that the result contains the expected error
             Assertions.assertTrue(ruleRuleValidationResultHashMap.values().stream()
                     .anyMatch(result -> {
                                 return result.isSuccessful() && result.getMessage().contains("Unable to calculate the overall coverage because input was negative.");
@@ -572,23 +564,16 @@ public class CoverageCheckerTest {
         ConfigurationManager configurationManager = getConfigurationManager();
         configurationManager.setFailOnError(true);
 
-        // Create an instance of CoverageChecker
         CoverageChecker coverageChecker = new CoverageChecker(ruleManager, configurationManager);
 
-        // Mock the static method calculateCoverage
         try (MockedStatic<CoverageChecker> mock = Mockito.mockStatic(CoverageChecker.class)) {
-            // Stub the static method to throw an IllegalArgumentException
             mock.when(() -> CoverageChecker.calculateCoverage(anyInt(), anyInt()))
                     .thenThrow(new IllegalArgumentException("Test exception"));
 
-            // Perform your test within the try block
             HashMap<Rule, RuleValidationResult> ruleRuleValidationResultHashMap = coverageChecker.runChecks();
 
-            // Add assertions to verify the behavior
-            // For example, check that the result contains the expected error
             Assertions.assertTrue(ruleRuleValidationResultHashMap.values().stream()
                     .anyMatch(result -> {
-                                //since fail on error is set to true the validation result will be false for isSuccessful()
                                 return !result.isSuccessful() && result.getMessage().contains("Unable to calculate the overall coverage because input was negative.");
                             }
                     ));
@@ -607,30 +592,23 @@ public class CoverageCheckerTest {
         Rule classChangedLineRule = new Rule(Rule.RuleType.PER_CLASS_CHANGED_LINES, 40);
         ruleManager.addRule(classChangedLineRule);
 
-
-        // Create an instance of CoverageChecker
         CoverageChecker coverageChecker = new CoverageChecker(ruleManager, getConfigurationManager());
         coverageChecker.setChangedFiles(getSampleChangedFiles());
         coverageChecker.setChangedLines(getChangedLinesOverviewErrors());
 
-        // Mock the static method calculateCoverage
         try (MockedStatic<CoverageChecker> mock = Mockito.mockStatic(CoverageChecker.class)) {
-            // Stub the static method to throw an IllegalArgumentException
             mock.when(() -> CoverageChecker.calculateCoverage(anyInt(), anyInt()))
-                    .thenThrow(new IllegalArgumentException("Test exception"));
+                    .thenThrow(new IllegalArgumentException("TEST EXCEPTION"));
 
-            // Perform your test within the try block
             HashMap<Rule, RuleValidationResult> ruleRuleValidationResultHashMap = coverageChecker.runChecks();
 
-            // Add assertions to verify the behavior
-            // For example, check that the result contains the expected error
             Assertions.assertTrue(ruleRuleValidationResultHashMap.values().stream()
                     .anyMatch(result -> {
                                 return result.isSuccessful() &&
                                         result.getMessage().contains("All the changed lines meet the required coverage of 40.00% per class.") &&
                                         result.getMessage().contains("The following classes had an error while calculating the coverage:") &&
-                                        result.getMessage().contains("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with the following error: Unable to calculate the coverage of the changed lines because input was negative.") &&
-                                        result.getMessage().contains("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with the following error: Unable to calculate the coverage of the changed lines because input was negative.");
+                                        result.getMessage().contains("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with the following error: Unable to calculate the coverage of the changed lines: TEST EXCEPTION") &&
+                                        result.getMessage().contains("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with the following error: Unable to calculate the coverage of the changed lines: TEST EXCEPTION");
                             }
                     ));
         } catch (IOException e) {
@@ -651,30 +629,24 @@ public class CoverageCheckerTest {
         ConfigurationManager configurationManager = getConfigurationManager();
         configurationManager.setFailOnError(true);
 
-        // Create an instance of CoverageChecker
         CoverageChecker coverageChecker = new CoverageChecker(ruleManager, configurationManager);
         coverageChecker.setChangedFiles(getSampleChangedFiles());
         coverageChecker.setChangedLines(getChangedLinesOverview());
 
-        // Mock the static method calculateCoverage
         try (MockedStatic<CoverageChecker> mock = Mockito.mockStatic(CoverageChecker.class)) {
-            // Stub the static method to throw an IllegalArgumentException
             mock.when(() -> CoverageChecker.calculateCoverage(anyInt(), anyInt()))
-                    .thenThrow(new IllegalArgumentException("Test exception"));
+                    .thenThrow(new IllegalArgumentException("TEST EXCEPTION"));
 
-            // Perform your test within the try block
             HashMap<Rule, RuleValidationResult> ruleRuleValidationResultHashMap = coverageChecker.runChecks();
 
-            // Add assertions to verify the behavior
-            // For example, check that the result contains the expected error
             Assertions.assertTrue(ruleRuleValidationResultHashMap.values().stream()
                     .anyMatch(result -> {
                                 //since fail on error is set to true the validation result will be false for isSuccessful()
                                 return !result.isSuccessful() &&
                                         result.getMessage().contains("All the changed lines meet the required coverage of 40.00% per class. \n") &&
                                         result.getMessage().contains("The following classes had an error while calculating the coverage: \n") &&
-                                        result.getMessage().contains("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with the following error: Unable to calculate the coverage of the changed lines because input was negative.\n") &&
-                                        result.getMessage().contains("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with the following error: Unable to calculate the coverage of the changed lines because input was negative.\n");
+                                        result.getMessage().contains("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java with the following error: Unable to calculate the coverage of the changed lines: TEST EXCEPTION") &&
+                                        result.getMessage().contains("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java with the following error: Unable to calculate the coverage of the changed lines: TEST EXCEPTION");
                             }
                     ));
         } catch (IOException e) {
@@ -692,26 +664,19 @@ public class CoverageCheckerTest {
         Rule classChangedLineRule = new Rule(Rule.RuleType.TOTAL_CHANGED_LINES, 40);
         ruleManager.addRule(classChangedLineRule);
 
-
-        // Create an instance of CoverageChecker
         CoverageChecker coverageChecker = new CoverageChecker(ruleManager, getConfigurationManager());
         coverageChecker.setChangedFiles(getSampleChangedFiles());
         coverageChecker.setChangedLines(getChangedLinesOverviewErrors());
 
-        // Mock the static method calculateCoverage
         try (MockedStatic<CoverageChecker> mock = Mockito.mockStatic(CoverageChecker.class)) {
-            // Stub the static method to throw an IllegalArgumentException
             mock.when(() -> CoverageChecker.calculateCoverage(anyInt(), anyInt()))
-                    .thenThrow(new IllegalArgumentException("Test exception"));
+                    .thenThrow(new IllegalArgumentException("TEST EXCEPTION"));
 
-            // Perform your test within the try block
             HashMap<Rule, RuleValidationResult> ruleRuleValidationResultHashMap = coverageChecker.runChecks();
 
-            // Add assertions to verify the behavior
-            // For example, check that the result contains the expected error
             Assertions.assertTrue(ruleRuleValidationResultHashMap.values().stream()
                     .anyMatch(result -> {
-                                return result.isSuccessful() && result.getMessage().contains("Unable to calculate the coverage of the changed lines because input was negative.");
+                                return result.isSuccessful() && result.getMessage().contains("Unable to calculate the coverage of the changed lines: TEST EXCEPTION");
                             }
                     ));
         } catch (IOException e) {
@@ -732,26 +697,20 @@ public class CoverageCheckerTest {
         ConfigurationManager configurationManager = getConfigurationManager();
         configurationManager.setFailOnError(true);
 
-        // Create an instance of CoverageChecker
         CoverageChecker coverageChecker = new CoverageChecker(ruleManager, configurationManager);
         coverageChecker.setChangedFiles(getSampleChangedFiles());
         coverageChecker.setChangedLines(getChangedLinesOverview());
 
-        // Mock the static method calculateCoverage
         try (MockedStatic<CoverageChecker> mock = Mockito.mockStatic(CoverageChecker.class)) {
-            // Stub the static method to throw an IllegalArgumentException
             mock.when(() -> CoverageChecker.calculateCoverage(anyInt(), anyInt()))
-                    .thenThrow(new IllegalArgumentException("Test exception"));
+                    .thenThrow(new IllegalArgumentException("TEST EXCEPTION"));
 
-            // Perform your test within the try block
             HashMap<Rule, RuleValidationResult> ruleRuleValidationResultHashMap = coverageChecker.runChecks();
 
-            // Add assertions to verify the behavior
-            // For example, check that the result contains the expected error
             Assertions.assertTrue(ruleRuleValidationResultHashMap.values().stream()
                     .anyMatch(result -> {
                                 //since fail on error is set to true the validation result will be false for isSuccessful()
-                                return !result.isSuccessful() && result.getMessage().contains("Unable to calculate the coverage of the changed lines because input was negative.");
+                                return !result.isSuccessful() && result.getMessage().contains("Unable to calculate the coverage of the changed lines: TEST EXCEPTION");
                             }
                     ));
         } catch (IOException e) {
