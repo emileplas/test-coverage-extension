@@ -394,6 +394,39 @@ public class CoverageCheckerTest {
 
     }
 
+    @Test
+    public void testCalculateCoverage(){
+        double coverage = CoverageChecker.calculateCoverage(10, 10);
+        Assertions.assertEquals(50.0, coverage);
+    }
+
+    @Test
+    public void testCalculateCoverageZero(){
+        double coverage = CoverageChecker.calculateCoverage(0, 10);
+        Assertions.assertEquals(0.0, coverage);
+    }
+
+    @Test
+    public void testCalculateCoverageZeroDivisor(){
+        double coverage = CoverageChecker.calculateCoverage(10, 0);
+        Assertions.assertEquals(100.0, coverage);
+    }
+
+    @Test
+    public void testCalculateCoverageZeroBoth(){
+        double coverage = CoverageChecker.calculateCoverage(0, 0);
+        Assertions.assertEquals(100.0, coverage);
+    }
+
+    @Test
+    public void testCalculateCoverageNegative(){
+        try{
+            double coverage = CoverageChecker.calculateCoverage(-10, 10);
+        } catch (Exception e) {
+            Assertions.assertTrue(e instanceof IllegalArgumentException);
+        }
+    }
+
 
 
 }

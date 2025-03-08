@@ -127,14 +127,37 @@ public class CoverageChecker {
             totalLinesMissed += codeCoverage.getLinesMissed();
         }
 
-        int totalLines = totalLinesCovered + totalLinesMissed;
+        double coverage;
+        try{
+            coverage = calculateCoverage(totalLinesCovered, totalLinesMissed);
+        } catch (IllegalArgumentException e) {
+            return new RuleValidationResult(!getConfigurationManager().getFailOnError(), "Unable to calculate the coverage of the changed lines because input was negative.");
+        }
 
-        double coverage = (double) totalLinesCovered / totalLines * 100;
 
         if(coverage < rule.getThreshold()) {
             return new RuleValidationResult(false, "The overall coverage of the changed lines is below the required percentage. Required: " +  doubleToString(rule.getThreshold()) + "% Actual: " + doubleToString(coverage) + "%");
         }else{
             return new RuleValidationResult(true, "The overall coverage of the changed lines is above the required percentage. Required: " + doubleToString(rule.getThreshold()) + "% Actual: " + doubleToString(coverage) + "%");
+        }
+
+    }
+
+    /**
+     * Calculates the coverage based on the lines covered and the lines missed.
+     * @param linesCovered the number of lines that were covered by tests according to JaCoCo
+     * @param linesMissed the number of lines that were not covered by tests according to JaCoCo
+     * @return the coverage in percentage
+     * @throws IllegalArgumentException if the lines covered or lines missed are negative
+     */
+    static double calculateCoverage(int linesCovered, int linesMissed) throws IllegalArgumentException {
+        if(linesCovered == 0 && linesMissed == 0){
+            return 100;
+        }else if(linesCovered < 0 || linesMissed < 0){
+            throw new IllegalArgumentException("Lines covered or lines missed cannot be negative.");
+        }else {
+            int totalLines = linesCovered + linesMissed;
+            return (double) linesCovered / totalLines * 100;
         }
 
     }
@@ -201,8 +224,16 @@ public class CoverageChecker {
 
         for(String className : getTotalCodeCoverageOfChangedLines().keySet()){
             CodeCoverage codeCoverage = getTotalCodeCoverageOfChangedLines().get(className);
-            int totalLines = codeCoverage.getLinesCovered() + codeCoverage.getLinesMissed();
-            Double coverage = Double.valueOf((double) codeCoverage.getLinesCovered() / totalLines * 100);
+
+            Double coverage;
+
+            try{
+                coverage = calculateCoverage(codeCoverage.getLinesCovered(), codeCoverage.getLinesMissed());
+            } catch (IllegalArgumentException e) {
+                return new RuleValidationResult(!getConfigurationManager().getFailOnError(), "Unable to calculate the coverage of the changed lines because input was negative for class: " + className);
+            }
+
+            //Double coverage = Double.valueOf((double) codeCoverage.getLinesCovered() / totalLines * 100);
             if(coverage < rule.getThreshold()){
                 success = false;
                 insufficientCoverage.put(className, coverage);
@@ -264,8 +295,15 @@ public class CoverageChecker {
 
         for(String className : overallClassCodeCoverage.keySet()){
             CodeCoverage codeCoverage = overallClassCodeCoverage.get(className);
-            int totalLines = codeCoverage.getLinesCovered() + codeCoverage.getLinesMissed();
-            Double coverage = Double.valueOf((double) codeCoverage.getLinesCovered() / totalLines * 100);
+
+            Double coverage;
+
+            try{
+                coverage = calculateCoverage(codeCoverage.getLinesCovered(), codeCoverage.getLinesMissed());
+            } catch (IllegalArgumentException e) {
+                return new RuleValidationResult(!getConfigurationManager().getFailOnError(), "Unable to calculate the coverage of the changed lines because input was negative for class: " + className);
+            }
+
             if(coverage < rule.getThreshold()){
                 success = false;
                 insufficientCoverage.put(className, coverage);
@@ -307,9 +345,13 @@ public class CoverageChecker {
     private RuleValidationResult checkOverallCoverageRule(Rule rule, JaCoCoInteractor jaCoCoInteractor) throws IOException {
         CodeCoverage totalCodeCoverage = jaCoCoInteractor.getTotalCodeCoverage();
 
-        int totalLines = totalCodeCoverage.getLinesCovered() + totalCodeCoverage.getLinesMissed();
+        Double coverage;
 
-        double coverage = (double) totalCodeCoverage.getLinesCovered() / totalLines * 100;
+        try{
+            coverage = calculateCoverage(totalCodeCoverage.getLinesCovered(), totalCodeCoverage.getLinesMissed());
+        } catch (IllegalArgumentException e) {
+            return new RuleValidationResult(!getConfigurationManager().getFailOnError(), "Unable to calculate the overall coverage because input was negative.");
+        }
 
         if(coverage < rule.getThreshold()){
             return new RuleValidationResult(false, "The overall coverage is below the required percentage. Required: " + doubleToString(rule.getThreshold()) + "% Actual: " + doubleToString(coverage) + "%");
