@@ -82,7 +82,6 @@ public class CoverageCheckMojo extends AbstractMojo {
 
             boolean isFailed = false;
 
-
             for (Rule rule : ruleRuleValidationResultHashMap.keySet()) {
                 RuleValidationResult ruleValidationResult = ruleRuleValidationResultHashMap.get(rule);
                 if(!ruleValidationResult.isSuccessful()){
@@ -97,7 +96,10 @@ public class CoverageCheckMojo extends AbstractMojo {
             if(isFailed){
                 throw new MojoFailureException(totalMessage.toString());
             }else{
-                getLog().info(totalMessage.toString());
+                String[] lines = totalMessage.toString().split("\n");
+                for (String line : lines) {
+                    getLog().info(line);
+                }
             }
         } catch (IOException e) {
             throw new MojoExecutionException("Unable to generate code coverage: " + e);
