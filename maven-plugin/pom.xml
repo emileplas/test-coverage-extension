@@ -5,7 +5,7 @@
     <parent>
         <groupId>tech.linebyline</groupId>
         <artifactId>test-coverage-extension</artifactId>
-        <version>1.0.1-ALPHA</version>
+        <version>1.0.2-ALPHA</version>
     </parent>
 
     <artifactId>test-coverage-extension-plugin</artifactId>
@@ -124,7 +124,7 @@
         <dependency>
             <groupId>tech.linebyline</groupId>
             <artifactId>test-coverage-extension-core</artifactId>
-            <version>1.0.1-ALPHA</version>
+            <version>1.0.2-ALPHA</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.maven/maven-project -->
