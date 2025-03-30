@@ -76,7 +76,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.0</version>
                     <executions>
                         <execution>
                             <phase>package</phase>
@@ -118,7 +118,7 @@
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-utils</artifactId>
-            <version>3.0.24</version>
+            <version>4.0.2</version>
         </dependency>
 
         <dependency>
