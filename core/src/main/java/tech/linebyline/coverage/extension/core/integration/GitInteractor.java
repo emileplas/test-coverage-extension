@@ -102,7 +102,7 @@ public class GitInteractor {
                     lineIndex = -2;
                 }
 
-                if(line.startsWith("@@") && line.endsWith("@@")){
+                if(line.startsWith("@@")){
                     passedFirstFileLine = true;
                     lineIndex = -1;
                 }
