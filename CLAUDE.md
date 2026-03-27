@@ -52,18 +52,30 @@ Tests use JUnit 5 + Mockito. The `single-module-example` module provides test fi
 
 ## Working with issues
 
-All work is tracked via GitHub Issues and the GitHub Project board (#4). Always:
+All work is tracked via GitHub Issues and the GitHub Project board (#4, project ID `PVT_kwHOAl11PM4Azc-d`). Always:
 
 1. **Work from issues** — every code change should reference an issue
 2. **Use milestones** — issues are grouped into release milestones (1.0.3, 1.0.4, etc.)
 3. **Respect priority labels** — P0-critical, P1-important, P2-minor
 4. **Update the board** — move issues through Status (Backlog → Ready → In progress → In review → Done)
 5. **Branch naming** — use the issue number: `fix/56-hunk-header-matching` or `feature/71-python-port`
+6. **Update status on PR creation** — when a PR is created for an issue, move it to "In review" on the board
 
 When creating new issues, always:
 - Assign a priority label (P0/P1/P2)
 - Assign to the appropriate milestone
 - Add to the project board with Priority, Size, and Start/End dates
+
+### Project board field IDs (for `gh project item-edit`)
+
+- **Status**: `PVTSSF_lAHOAl11PM4Azc-dzgpPguE`
+  - Backlog: `f75ad846`, Ready: `61e4505c`, In progress: `47fc9ee4`, In review: `df73e18b`, Done: `98236657`
+- **Priority**: `PVTSSF_lAHOAl11PM4Azc-dzgpPgzM`
+  - P0: `79628723`, P1: `0a877460`, P2: `da944a9c`
+- **Size**: `PVTSSF_lAHOAl11PM4Azc-dzgpPgzY`
+  - XS: `6c6483d2`, S: `f784b110`, M: `7515a9f1`, L: `817d0097`, XL: `db339eb2`
+- **Start date**: `PVTF_lAHOAl11PM4Azc-dzgpPgzw`
+- **End date**: `PVTF_lAHOAl11PM4Azc-dzgpPgz8`
 
 ## Publishing
 
