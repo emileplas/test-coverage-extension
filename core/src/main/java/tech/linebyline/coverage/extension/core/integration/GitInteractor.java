@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -78,48 +79,13 @@ public class GitInteractor {
         // Start the process
         Process process = processBuilder.start();
 
-        HashMap<String, int[]> changedLinesPerFile = new HashMap<>();
+        List<String> diffLines = new ArrayList<>();
 
         // Read the output
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
             String line;
-            boolean passedFirstFileLine = false;
-            boolean passedFirstClassLine = false;
-            ArrayList<Integer> lines = null;
-            int lineIndex = -2;
-            String file = null;
             while ((line = reader.readLine()) != null) {
-
-                if(isLineDiffGitLine(line)){
-                    file = line;
-                    if(passedFirstClassLine){
-                        changedLinesPerFile.put(file, lines.stream().mapToInt(Integer::intValue).toArray());
-                    }
-
-                    passedFirstFileLine = false;
-                    passedFirstClassLine = false;
-                    lines = new ArrayList<>();
-                    lineIndex = -2;
-                }
-
-                if(line.startsWith("@@") && line.endsWith("@@")){
-                    passedFirstFileLine = true;
-                    lineIndex = -1;
-                }
-
-                if(passedFirstFileLine){
-                    lineIndex++;
-                }
-
-                if(line.contains("class") && !passedFirstClassLine){
-                    passedFirstClassLine = true;
-                }
-
-                if(passedFirstClassLine){
-                    if(line.startsWith("+")){
-                        lines.add(lineIndex);
-                    }
-                }
+                diffLines.add(line);
             }
         }
 
@@ -127,6 +93,62 @@ public class GitInteractor {
         int exitCode = process.waitFor();
         if (exitCode != 0) {
             throw new RuntimeException("Error executing git command: " + exitCode);
+        }
+
+        return parseChangedLines(diffLines);
+    }
+
+    /**
+     * Parses git diff output into a map of file paths to changed line numbers.
+     * @param diffLines the lines of git diff output
+     * @return a map with the file as key and an array of changed lines as value
+     */
+    protected static HashMap<String, int[]> parseChangedLines(List<String> diffLines) {
+        HashMap<String, int[]> changedLinesPerFile = new HashMap<>();
+
+        boolean passedFirstFileLine = false;
+        boolean passedFirstClassLine = false;
+        ArrayList<Integer> lines = null;
+        int lineIndex = -2;
+        String file = null;
+
+        for (String line : diffLines) {
+
+            if(isLineDiffGitLine(line)){
+                if(file != null && passedFirstClassLine){
+                    changedLinesPerFile.put(file, lines.stream().mapToInt(Integer::intValue).toArray());
+                }
+                file = line;
+
+                passedFirstFileLine = false;
+                passedFirstClassLine = false;
+                lines = new ArrayList<>();
+                lineIndex = -2;
+            }
+
+            if(line.startsWith("@@")){
+                passedFirstFileLine = true;
+                lineIndex = -1;
+            }
+
+            if(passedFirstFileLine){
+                lineIndex++;
+            }
+
+            if(line.contains("class") && !passedFirstClassLine){
+                passedFirstClassLine = true;
+            }
+
+            if(passedFirstClassLine){
+                if(line.startsWith("+")){
+                    lines.add(lineIndex);
+                }
+            }
+        }
+
+        // Save the last file (fixes #58: last file was previously dropped)
+        if(file != null && passedFirstClassLine){
+            changedLinesPerFile.put(file, lines.stream().mapToInt(Integer::intValue).toArray());
         }
 
         return changedLinesPerFile;
