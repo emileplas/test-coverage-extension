@@ -128,10 +128,14 @@ public class GitInteractor {
 
             if(line.startsWith("@@")){
                 passedFirstFileLine = true;
-                lineIndex = -1;
+                // Parse the actual starting line number from the hunk header (e.g. +15 from "@@ -10,5 +15,7 @@")
+                // Subtract 1 because the first content line after @@ will increment it to the correct value
+                lineIndex = parseHunkStartLine(line) - 1;
             }
 
-            if(passedFirstFileLine){
+            // Only increment for lines that exist in the new file:
+            // skip @@ headers (not code lines) and deleted lines (- prefix, only in old file)
+            if(passedFirstFileLine && !line.startsWith("@@") && !line.startsWith("-")){
                 lineIndex++;
             }
 
@@ -157,6 +161,20 @@ public class GitInteractor {
     private static final String REGEX = "^diff --git a/.* b/.*$";
 
     private static final Pattern PATTERN = Pattern.compile(REGEX);
+
+    private static final Pattern HUNK_PATTERN = Pattern.compile("@@\\s+-\\d+(?:,\\d+)?\\s+\\+(\\d+)(?:,\\d+)?\\s+@@");
+
+    /**
+     * Extracts the new-file starting line number from a hunk header.
+     * E.g. "@@ -10,5 +15,7 @@ public class Foo" returns 15.
+     */
+    protected static int parseHunkStartLine(String line) {
+        Matcher matcher = HUNK_PATTERN.matcher(line);
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(1));
+        }
+        throw new IllegalArgumentException("Not a valid hunk header: " + line);
+    }
 
     /**
      * Check if a line is a git diff line in the format of "diff --git a/... b/..."
