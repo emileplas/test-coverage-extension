@@ -57,7 +57,7 @@ public class GitInteractorTest {
     }
 
     @Test
-    public void parseChangedLinesHunkWithTrailingContextTest() {
+    public void parseChangedLines_hunkWithTrailingContext() {
         // Real-world hunk header: @@ -10,5 +10,7 @@ public class Foo
         // This was the bug in #56 — endsWith("@@") would not match this
         List<String> diff = Arrays.asList(
@@ -82,7 +82,7 @@ public class GitInteractorTest {
     }
 
     @Test
-    public void parseChangedLinesHunkWithoutTrailingContextTest() {
+    public void parseChangedLines_hunkWithoutTrailingContext() {
         // Hunk header ending with @@ (no trailing context)
         List<String> diff = Arrays.asList(
                 "diff --git a/src/main/java/com/example/Bar.java b/src/main/java/com/example/Bar.java",
@@ -104,7 +104,7 @@ public class GitInteractorTest {
     }
 
     @Test
-    public void parseChangedLinesMultipleFilesTest() {
+    public void parseChangedLines_multipleFiles() {
         List<String> diff = Arrays.asList(
                 "diff --git a/src/main/java/com/example/First.java b/src/main/java/com/example/First.java",
                 "--- a/src/main/java/com/example/First.java",
@@ -135,7 +135,7 @@ public class GitInteractorTest {
     }
 
     @Test
-    public void parseChangedLinesLastFileNotDroppedTest() {
+    public void parseChangedLines_lastFileNotDropped() {
         // This was the bug in #58 — the last file in a diff was never saved
         List<String> diff = Arrays.asList(
                 "diff --git a/src/main/java/com/example/Only.java b/src/main/java/com/example/Only.java",
@@ -156,7 +156,7 @@ public class GitInteractorTest {
     }
 
     @Test
-    public void parseChangedLinesMultipleHunksInOneFileTest() {
+    public void parseChangedLines_multipleHunksInOneFile() {
         List<String> diff = Arrays.asList(
                 "diff --git a/src/main/java/com/example/Multi.java b/src/main/java/com/example/Multi.java",
                 "--- a/src/main/java/com/example/Multi.java",
@@ -180,7 +180,7 @@ public class GitInteractorTest {
     }
 
     @Test
-    public void parseChangedLinesDeletedLinesDontShiftNumbersTest() {
+    public void parseChangedLines_deletedLinesDontShiftNumbers() {
         // Deleted lines (- prefix) only exist in the old file and should not increment the line counter
         List<String> diff = Arrays.asList(
                 "diff --git a/src/main/java/com/example/Del.java b/src/main/java/com/example/Del.java",
@@ -203,7 +203,7 @@ public class GitInteractorTest {
     }
 
     @Test
-    public void parseHunkStartLineVariousFormatsTest() {
+    public void parseHunkStartLine_variousFormats() {
         assertEquals(15, parseHunkStartLine("@@ -10,5 +15,7 @@"));
         assertEquals(15, parseHunkStartLine("@@ -10,5 +15,7 @@ public class Foo {"));
         assertEquals(1, parseHunkStartLine("@@ -1,3 +1,4 @@"));
@@ -211,7 +211,7 @@ public class GitInteractorTest {
     }
 
     @Test
-    public void parseChangedLinesEmptyDiffTest() {
+    public void parseChangedLines_emptyDiff() {
         List<String> diff = List.of();
 
         HashMap<String, int[]> result = parseChangedLines(diff);
