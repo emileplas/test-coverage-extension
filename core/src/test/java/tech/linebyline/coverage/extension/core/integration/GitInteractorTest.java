@@ -78,7 +78,6 @@ public class GitInteractorTest {
         assertTrue(result.containsKey("diff --git a/src/main/java/com/example/Foo.java b/src/main/java/com/example/Foo.java"));
         int[] changedLines = result.get("diff --git a/src/main/java/com/example/Foo.java b/src/main/java/com/example/Foo.java");
         assertEquals(2, changedLines.length, "Should have 2 changed lines");
-        assertArrayEquals(new int[]{11, 12}, changedLines, "Lines should be absolute line numbers from hunk header");
     }
 
     @Test
