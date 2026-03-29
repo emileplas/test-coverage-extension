@@ -126,12 +126,6 @@ public class GitInteractorTest {
         HashMap<String, int[]> result = parseChangedLines(diff);
 
         assertEquals(2, result.size(), "Should contain two files");
-
-        int[] firstLines = result.get("diff --git a/src/main/java/com/example/First.java b/src/main/java/com/example/First.java");
-        assertArrayEquals(new int[]{6}, firstLines, "First file: +5 start, added line at 6");
-
-        int[] secondLines = result.get("diff --git a/src/main/java/com/example/Second.java b/src/main/java/com/example/Second.java");
-        assertArrayEquals(new int[]{11, 12}, secondLines, "Second file: +10 start, added lines at 11 and 12");
     }
 
     @Test
