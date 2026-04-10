@@ -121,6 +121,9 @@ public class GitInteractor {
                     }
                 }
             }
+            if (file != null && lines != null) {
+                changedLinesPerFile.put(file, lines.stream().mapToInt(Integer::intValue).toArray());
+            }
         }
 
         // Wait for the process to complete
