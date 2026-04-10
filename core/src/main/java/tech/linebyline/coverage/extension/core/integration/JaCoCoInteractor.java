@@ -120,6 +120,16 @@ public class JaCoCoInteractor {
                     File sourceFile = new File(sourceDir, classCoverage.getName() + ".java");
 
                     if (sourceFile.exists()) {
+                        String filePath = sourceFile.getPath();
+
+                        // Only process files that are in the changedFiles set
+                        boolean isChangedFile = changedFiles.stream()
+                                .anyMatch(changedFile -> filePath.contains(changedFile.getPath()) || changedFile.getPath().contains(filePath));
+
+                        if (!isChangedFile) {
+                            continue;
+                        }
+
                         //we create a code coverage object for the class file
                         ICounter lineCounter = classCoverage.getLineCounter();
                         ICounter instructionsCounter = classCoverage.getInstructionCounter();
@@ -129,7 +139,6 @@ public class JaCoCoInteractor {
                         int lineCoveredCount = lineCounter.getCoveredCount();
                         int lineMissedCount = lineCounter.getMissedCount();
 
-                        String filePath = sourceFile.getPath();
                         CodeCoverage codeCoverageForFile = new CodeCoverage(filePath, CodeCoverage.CoverageType.CLASS, instructionsMissedCount, instructionsCoveredCount, lineMissedCount, lineCoveredCount);
 
                         codeCoveragePerFile.put(filePath, codeCoverageForFile);
@@ -164,6 +173,16 @@ public class JaCoCoInteractor {
                     //boolean found = classFilesOfModule.stream().anyMatch(filePath -> filePath.contains(classCoverage.getName()));
 
                     if (sourceFile.exists()) {
+                        String filePath = sourceFile.getPath();
+
+                        // Only process files that are in the changedFiles set
+                        boolean isChangedFile = changedFiles.stream()
+                                .anyMatch(changedFile -> filePath.contains(changedFile.getPath()) || changedFile.getPath().contains(filePath));
+
+                        if (!isChangedFile) {
+                            continue;
+                        }
+
                         int[] changedLinesOfFile = getLinesForPath(classCoverage.getName(), changedLinesOverview);
 
                         if(changedLinesOfFile.length == 0){
@@ -195,7 +214,6 @@ public class JaCoCoInteractor {
                             }*/
                         }
 
-                        String filePath = sourceFile.getPath();
                         CodeCoverage codeCoverageForFile = new CodeCoverage(filePath, CodeCoverage.CoverageType.PER_CHANGED_LINE, -1, -1, totalLinesThatAreNotCovered, totalLinesThatAreCovered);
 
                         codeCoveragePerFile.put(filePath, codeCoverageForFile);
