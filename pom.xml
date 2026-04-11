@@ -6,7 +6,7 @@
 
     <groupId>tech.linebyline</groupId>
     <artifactId>test-coverage-extension</artifactId>
-    <version>1.0.2-ALPHA</version>
+    <version>1.0.3</version>
     <packaging>pom</packaging>
 
     <name>test-coverage-extension</name>
@@ -26,9 +26,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!--shared versions-->
         <junit.version>5.12.0</junit.version>
-        <parent.version>1.0.2-ALPHA</parent.version>
-        <core.version>1.0.2-ALPHA</core.version>
-        <plugin.version>1.0.2-ALPHA</plugin.version>
+        <parent.version>1.0.3</parent.version>
+        <core.version>1.0.3</core.version>
+        <plugin.version>1.0.3</plugin.version>
     </properties>
 
     <scm>
