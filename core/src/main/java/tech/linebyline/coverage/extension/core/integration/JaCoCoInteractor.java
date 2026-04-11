@@ -119,7 +119,10 @@ public class JaCoCoInteractor {
                     //if the class coverage of the jacoco report is found in the source files of the module
                     File sourceFile = new File(sourceDir, classCoverage.getName() + ".java");
 
-                    if (sourceFile.exists()) {
+                    boolean isChangedFile = changedFiles.stream()
+                            .anyMatch(f -> f.getPath().replace("\\", "/").contains(classCoverage.getName()));
+
+                    if (sourceFile.exists() && isChangedFile) {
                         //we create a code coverage object for the class file
                         ICounter lineCounter = classCoverage.getLineCounter();
                         ICounter instructionsCounter = classCoverage.getInstructionCounter();
@@ -163,7 +166,10 @@ public class JaCoCoInteractor {
                     File sourceFile = new File(sourceDir, classCoverage.getName() + ".java");
                     //boolean found = classFilesOfModule.stream().anyMatch(filePath -> filePath.contains(classCoverage.getName()));
 
-                    if (sourceFile.exists()) {
+                    boolean isChangedFile = changedFiles.stream()
+                            .anyMatch(f -> f.getPath().replace("\\", "/").contains(classCoverage.getName()));
+
+                    if (sourceFile.exists() && isChangedFile) {
                         int[] changedLinesOfFile = getLinesForPath(classCoverage.getName(), changedLinesOverview);
 
                         if(changedLinesOfFile.length == 0){
