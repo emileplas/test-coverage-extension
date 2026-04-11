@@ -33,5 +33,7 @@ jobs:
         with:
           gpg_private_key: ${{ secrets.GPG_SIGN_KEY }}
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
+      - name: Check no SNAPSHOT versions
+        uses: ./.github/actions/check-no-snapshots
       - name: Deploy
         run: mvn deploy
