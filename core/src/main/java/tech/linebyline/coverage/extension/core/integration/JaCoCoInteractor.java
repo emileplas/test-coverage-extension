@@ -211,7 +211,7 @@ public class JaCoCoInteractor {
 
     /**
      * Checks whether the given source file matches any file in the changed files set.
-     * Matching is done by checking if the source file path contains the changed file path,
+     * Matching is done by checking if the source file path ends with the changed file path,
      * which handles the case where the source file has a different base directory prefix.
      * @param sourceFile the resolved source file on disk
      * @param changedFiles the set of changed files from git
