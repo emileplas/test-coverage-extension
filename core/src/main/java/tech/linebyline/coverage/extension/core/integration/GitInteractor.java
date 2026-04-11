@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -78,48 +79,13 @@ public class GitInteractor {
         // Start the process
         Process process = processBuilder.start();
 
-        HashMap<String, int[]> changedLinesPerFile = new HashMap<>();
+        List<String> diffLines = new ArrayList<>();
 
         // Read the output
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
             String line;
-            boolean passedFirstFileLine = false;
-            boolean passedFirstClassLine = false;
-            ArrayList<Integer> lines = null;
-            int lineIndex = -2;
-            String file = null;
             while ((line = reader.readLine()) != null) {
-
-                if(isLineDiffGitLine(line)){
-                    file = line;
-                    if(passedFirstClassLine){
-                        changedLinesPerFile.put(file, lines.stream().mapToInt(Integer::intValue).toArray());
-                    }
-
-                    passedFirstFileLine = false;
-                    passedFirstClassLine = false;
-                    lines = new ArrayList<>();
-                    lineIndex = -2;
-                }
-
-                if(line.startsWith("@@") && line.endsWith("@@")){
-                    passedFirstFileLine = true;
-                    lineIndex = -1;
-                }
-
-                if(passedFirstFileLine){
-                    lineIndex++;
-                }
-
-                if(line.contains("class") && !passedFirstClassLine){
-                    passedFirstClassLine = true;
-                }
-
-                if(passedFirstClassLine){
-                    if(line.startsWith("+")){
-                        lines.add(lineIndex);
-                    }
-                }
+                diffLines.add(line);
             }
         }
 
@@ -129,12 +95,86 @@ public class GitInteractor {
             throw new RuntimeException("Error executing git command: " + exitCode);
         }
 
+        return parseChangedLines(diffLines);
+    }
+
+    /**
+     * Parses git diff output into a map of file paths to changed line numbers.
+     * @param diffLines the lines of git diff output
+     * @return a map with the file as key and an array of changed lines as value
+     */
+    protected static HashMap<String, int[]> parseChangedLines(List<String> diffLines) {
+        HashMap<String, int[]> changedLinesPerFile = new HashMap<>();
+
+        boolean passedFirstFileLine = false;
+        boolean passedFirstClassLine = false;
+        ArrayList<Integer> lines = null;
+        int lineIndex = -2;
+        String file = null;
+
+        for (String line : diffLines) {
+
+            if(isLineDiffGitLine(line)){
+                if(file != null && passedFirstClassLine){
+                    changedLinesPerFile.put(file, lines.stream().mapToInt(Integer::intValue).toArray());
+                }
+                file = line;
+
+                passedFirstFileLine = false;
+                passedFirstClassLine = false;
+                lines = new ArrayList<>();
+                lineIndex = -2;
+            }
+
+            if(line.startsWith("@@")){
+                passedFirstFileLine = true;
+                // Parse the actual starting line number from the hunk header (e.g. +15 from "@@ -10,5 +15,7 @@")
+                // Subtract 1 because the first content line after @@ will increment it to the correct value
+                lineIndex = parseHunkStartLine(line) - 1;
+            }
+
+            // Only increment for lines that exist in the new file:
+            // skip @@ headers (not code lines) and deleted lines (- prefix, only in old file)
+            if(passedFirstFileLine && !line.startsWith("@@") && !line.startsWith("-")){
+                lineIndex++;
+            }
+
+            if(line.contains("class") && !passedFirstClassLine){
+                passedFirstClassLine = true;
+            }
+
+            if(passedFirstClassLine){
+                if(line.startsWith("+")){
+                    lines.add(lineIndex);
+                }
+            }
+        }
+
+        // Save the last file (fixes #58: last file was previously dropped)
+        if(file != null && passedFirstClassLine){
+            changedLinesPerFile.put(file, lines.stream().mapToInt(Integer::intValue).toArray());
+        }
+
         return changedLinesPerFile;
     }
 
     private static final String REGEX = "^diff --git a/.* b/.*$";
 
     private static final Pattern PATTERN = Pattern.compile(REGEX);
+
+    private static final Pattern HUNK_PATTERN = Pattern.compile("@@\\s+-\\d+(?:,\\d+)?\\s+\\+(\\d+)(?:,\\d+)?\\s+@@");
+
+    /**
+     * Extracts the new-file starting line number from a hunk header.
+     * E.g. "@@ -10,5 +15,7 @@ public class Foo" returns 15.
+     */
+    protected static int parseHunkStartLine(String line) {
+        Matcher matcher = HUNK_PATTERN.matcher(line);
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(1));
+        }
+        throw new IllegalArgumentException("Not a valid hunk header: " + line);
+    }
 
     /**
      * Check if a line is a git diff line in the format of "diff --git a/... b/..."
