@@ -5,7 +5,7 @@
 **test-coverage-extension** is a Maven plugin (published to Maven Central) that enforces test coverage on changed lines using JaCoCo + git diff. It compares your branch against a base branch and validates coverage rules on the changed code.
 
 - **Group ID**: `tech.linebyline`
-- **Current version**: `1.0.2-ALPHA`
+- **Current version**: `1.0.3`
 - **Java**: 17 (SDKMAN managed)
 - **Repo**: https://github.com/emileplas/test-coverage-extension
 
