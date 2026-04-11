@@ -119,7 +119,7 @@ public class JaCoCoInteractor {
                     //if the class coverage of the jacoco report is found in the source files of the module
                     File sourceFile = new File(sourceDir, classCoverage.getName() + ".java");
 
-                    if (sourceFile.exists()) {
+                    if (sourceFile.exists() && isChangedFile(sourceFile, changedFiles)) {
                         //we create a code coverage object for the class file
                         ICounter lineCounter = classCoverage.getLineCounter();
                         ICounter instructionsCounter = classCoverage.getInstructionCounter();
@@ -163,7 +163,7 @@ public class JaCoCoInteractor {
                     File sourceFile = new File(sourceDir, classCoverage.getName() + ".java");
                     //boolean found = classFilesOfModule.stream().anyMatch(filePath -> filePath.contains(classCoverage.getName()));
 
-                    if (sourceFile.exists()) {
+                    if (sourceFile.exists() && isChangedFile(sourceFile, changedFiles)) {
                         int[] changedLinesOfFile = getLinesForPath(classCoverage.getName(), changedLinesOverview);
 
                         if(changedLinesOfFile.length == 0){
@@ -207,6 +207,20 @@ public class JaCoCoInteractor {
 
         return codeCoveragePerFile;
 
+    }
+
+    /**
+     * Checks whether the given source file matches any file in the changed files set.
+     * Matching is done by checking if the source file path contains the changed file path,
+     * which handles the case where the source file has a different base directory prefix.
+     * @param sourceFile the resolved source file on disk
+     * @param changedFiles the set of changed files from git
+     * @return true if the source file is considered a changed file, false otherwise
+     */
+    protected static boolean isChangedFile(File sourceFile, Set<File> changedFiles) {
+        String sourceFilePath = sourceFile.getPath();
+        return changedFiles.stream()
+                .anyMatch(changedFile -> sourceFilePath.contains(changedFile.getPath()));
     }
 
     /**

@@ -13,7 +13,9 @@ import java.util.Set;
 
 import static tech.linebyline.coverage.extension.core.integration.JaCoCoInteractor.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JaCoCoInteractorTest {
 
@@ -226,6 +228,79 @@ public class JaCoCoInteractorTest {
         Assertions.assertEquals(2, secondFile.getLinesMissed());
         Assertions.assertEquals(1, secondFile.getLinesCovered());
         Assertions.assertEquals(CodeCoverage.CoverageType.PER_CHANGED_LINE, secondFile.getCoverageType());
+    }
+
+    // ---- isChangedFile unit tests ----
+
+    @Test
+    public void testIsChangedFile_matchesWhenSourcePathContainsChangedFilePath() {
+        File sourceFile = new File("../single-module-example/src/main/java/com/example/MyClass.java");
+        Set<File> changedFiles = new HashSet<>();
+        changedFiles.add(new File("single-module-example/src/main/java/com/example/MyClass.java"));
+
+        assertTrue(isChangedFile(sourceFile, changedFiles));
+    }
+
+    @Test
+    public void testIsChangedFile_noMatchWhenDifferentFile() {
+        File sourceFile = new File("../single-module-example/src/main/java/com/example/MyClass.java");
+        Set<File> changedFiles = new HashSet<>();
+        changedFiles.add(new File("single-module-example/src/main/java/com/example/OtherClass.java"));
+
+        assertFalse(isChangedFile(sourceFile, changedFiles));
+    }
+
+    @Test
+    public void testIsChangedFile_noMatchWhenChangedFilesEmpty() {
+        File sourceFile = new File("../single-module-example/src/main/java/com/example/MyClass.java");
+
+        assertFalse(isChangedFile(sourceFile, new HashSet<>()));
+    }
+
+    @Test
+    public void testIsChangedFile_matchesOneOfMultipleChangedFiles() {
+        File sourceFile = new File("../single-module-example/src/main/java/com/example/MyClass.java");
+        Set<File> changedFiles = new HashSet<>();
+        changedFiles.add(new File("single-module-example/src/main/java/com/example/OtherClass.java"));
+        changedFiles.add(new File("single-module-example/src/main/java/com/example/MyClass.java"));
+
+        assertTrue(isChangedFile(sourceFile, changedFiles));
+    }
+
+    // ---- filtering integration tests ----
+
+    @Test
+    public void testGetOverallCodeCoverageChangedFiles_filtersToChangedFilesOnly() {
+        Set<File> changedFiles = new HashSet<>();
+        changedFiles.add(new File("single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java"));
+
+        HashMap<String, CodeCoverage> result;
+        try {
+            JaCoCoInteractor jaCoCoInteractor = new JaCoCoInteractor(singleModuleFile, classPathDir, new String[]{"src/main/java"}, new File("../single-module-example/"));
+            result = jaCoCoInteractor.getOverallCodeCoverageForChangedFiles(changedFiles);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Assertions.assertEquals(1, result.size());
+        Assertions.assertNotNull(result.get("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java"));
+    }
+
+    @Test
+    public void testGetCodeCoverageForChangedLinesOfChangedFiles_filtersToChangedFilesOnly() {
+        Set<File> changedFiles = new HashSet<>();
+        changedFiles.add(new File("single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java"));
+
+        HashMap<String, CodeCoverage> result;
+        try {
+            JaCoCoInteractor jaCoCoInteractor = new JaCoCoInteractor(singleModuleFile, classPathDir, new String[]{"src/main/java"}, new File("../single-module-example/"));
+            result = jaCoCoInteractor.getCodeCoverageForChangedLinesOfChangedFiles(changedFiles, getChangedLinesOverview());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Assertions.assertEquals(1, result.size());
+        Assertions.assertNotNull(result.get("../single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java"));
     }
 
 /*    public String getTestFilePath() {
