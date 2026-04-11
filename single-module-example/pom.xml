@@ -11,7 +11,7 @@
 
     <groupId>com.brabel</groupId>
     <artifactId>single-module-example</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <name>Archetype - single-module-example</name>
     <url>http://maven.apache.org</url>
 
