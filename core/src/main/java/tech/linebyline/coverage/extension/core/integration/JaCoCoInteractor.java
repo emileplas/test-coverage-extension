@@ -220,7 +220,7 @@ public class JaCoCoInteractor {
     protected static boolean isChangedFile(File sourceFile, Set<File> changedFiles) {
         String sourceFilePath = sourceFile.getPath();
         return changedFiles.stream()
-                .anyMatch(changedFile -> sourceFilePath.contains(changedFile.getPath()));
+                .anyMatch(changedFile -> sourceFilePath.endsWith(changedFile.getPath()));
     }
 
     /**
@@ -230,9 +230,10 @@ public class JaCoCoInteractor {
      * @return the integer array for the file
      */
     protected static int[] getLinesForPath(String path, HashMap<String, int[]> changedLinesOverview) {
+        String normalizedPath = path.endsWith(".java") ? path : path + ".java";
         for (Map.Entry<String, int[]> entry : changedLinesOverview.entrySet()) {
             String key = entry.getKey();
-            if (key.contains(path)) {
+            if (key.contains(normalizedPath)) {
                 return entry.getValue();
             }
         }

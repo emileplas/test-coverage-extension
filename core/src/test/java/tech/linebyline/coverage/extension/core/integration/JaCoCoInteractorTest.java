@@ -111,7 +111,7 @@ public class JaCoCoInteractorTest {
         HashMap<String, int[]> changedLinesOverview = new HashMap<>();
 
         changedLinesOverview.put("diff --git a/single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java b/single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java", new int[]{3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34});
-        changedLinesOverview.put("diff --git a/single-module-example/src/test/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClassTest.java b/single-module-example/src/test/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClassTest.java",  new int[]{3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18});
+        changedLinesOverview.put("diff --git a/single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java b/single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java",  new int[]{3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18});
 
         //should not be included in the result
         changedLinesOverview.put("diff --git a/core/pom.xml b/core/pom.xml", new int[]{-2, -2});
@@ -122,7 +122,7 @@ public class JaCoCoInteractorTest {
     @Test
     public void testGetLinesFromPath(){
         int[] expectedLines = new int[]{3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18};
-        int[] linesForPath = getLinesForPath("single-module-example/src/test/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClassTest.java", getChangedLinesOverview());
+        int[] linesForPath = getLinesForPath("single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass", getChangedLinesOverview());
         Assertions.assertArrayEquals(expectedLines, linesForPath);
 
         int[] expectedLines2 = new int[]{3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34};
@@ -181,7 +181,7 @@ public class JaCoCoInteractorTest {
         HashMap<String, int[]> changedLinesOverview = new HashMap<>();
 
         changedLinesOverview.put("diff --git a/single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java b/single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java", new int[]{4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34});
-        changedLinesOverview.put("diff --git a/single-module-example/src/test/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClassTest.java b/single-module-example/src/test/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClassTest.java",  new int[]{4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18});
+        changedLinesOverview.put("diff --git a/single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java b/single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java",  new int[]{4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18});
 
         //should not be included in the result
         changedLinesOverview.put("diff --git a/core/pom.xml b/core/pom.xml", new int[]{-2, -2});
@@ -265,6 +265,15 @@ public class JaCoCoInteractorTest {
         changedFiles.add(new File("single-module-example/src/main/java/com/example/MyClass.java"));
 
         assertTrue(isChangedFile(sourceFile, changedFiles));
+    }
+
+    @Test
+    public void testIsChangedFile_noFalsePositiveOnPartialNameMatch() {
+        File sourceFile = new File("../single-module-example/src/main/java/com/example/MyClassHelper.java");
+        Set<File> changedFiles = new HashSet<>();
+        changedFiles.add(new File("single-module-example/src/main/java/com/example/MyClass.java"));
+
+        assertFalse(isChangedFile(sourceFile, changedFiles));
     }
 
     // ---- filtering integration tests ----

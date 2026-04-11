@@ -158,7 +158,7 @@ public class CoverageCheckerTest {
         HashMap<String, int[]> changedLinesOverview = new HashMap<>();
 
         changedLinesOverview.put("diff --git a/single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java b/single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java", new int[]{3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34});
-        changedLinesOverview.put("diff --git a/single-module-example/src/test/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClassTest.java b/single-module-example/src/test/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClassTest.java",  new int[]{3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18});
+        changedLinesOverview.put("diff --git a/single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java b/single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java",  new int[]{3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18});
 
         //should not be included in the result
         changedLinesOverview.put("diff --git a/core/pom.xml b/core/pom.xml", new int[]{-2, -2});
@@ -170,7 +170,7 @@ public class CoverageCheckerTest {
         HashMap<String, int[]> changedLinesOverview = new HashMap<>();
 
         changedLinesOverview.put("diff --git a/single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java b/single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/SecondExampleClass.java", new int[]{-1, -1});
-        changedLinesOverview.put("diff --git a/single-module-example/src/test/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClassTest.java b/single-module-example/src/test/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClassTest.java",  new int[]{3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18});
+        changedLinesOverview.put("diff --git a/single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java b/single-module-example/src/main/java/com/brabel/coverage/extension/single/module/sample/FirstExampleClass.java",  new int[]{3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18});
 
         //should not be included in the result
         changedLinesOverview.put("diff --git a/core/pom.xml b/core/pom.xml", new int[]{-2, -2});
