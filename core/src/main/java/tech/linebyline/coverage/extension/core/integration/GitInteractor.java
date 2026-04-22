@@ -36,8 +36,7 @@ public class GitInteractor {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    // Add each changed file (line) to the list
-                    changedFiles.add(new File(line.split("\t")[1]));
+                    changedFiles.addAll(parseNameStatusLine(line));
                 }
             }
 
@@ -62,6 +61,35 @@ public class GitInteractor {
         }
 
         return changedFiles;
+    }
+
+    /**
+     * Parses a single line of {@code git diff --name-status} output into a set of {@link File}s.
+     * <ul>
+     *   <li>Deleted files (status {@code D}) are skipped — they no longer exist on the current branch.</li>
+     *   <li>Renamed files (status {@code R<score>}, e.g. {@code R100}) use {@code parts[2]} (the new name).</li>
+     *   <li>Only {@code .java} files are included — other file types have no JaCoCo coverage data.</li>
+     * </ul>
+     */
+    protected static Set<File> parseNameStatusLine(String line) {
+        Set<File> result = new HashSet<>();
+        String[] parts = line.split("\t");
+        String status = parts[0];
+
+        // Skip deleted files — they no longer exist in the working tree
+        if (status.startsWith("D")) {
+            return result;
+        }
+
+        // For renames (R followed by similarity score, e.g. R100), use the new filename (parts[2])
+        String filePath = status.startsWith("R") ? parts[2] : parts[1];
+
+        // Only include Java source files — non-Java files have no JaCoCo coverage data
+        if (filePath.endsWith(".java")) {
+            result.add(new File(filePath));
+        }
+
+        return result;
     }
 
     /**

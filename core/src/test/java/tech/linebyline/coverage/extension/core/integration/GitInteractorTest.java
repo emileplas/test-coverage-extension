@@ -218,4 +218,49 @@ public class GitInteractorTest {
 
         assertTrue(result.isEmpty(), "Empty diff should produce empty result");
     }
+
+    @Test
+    public void parseNameStatusLineModifiedJavaFileTest() {
+        Set<File> result = parseNameStatusLine("M\tsrc/main/java/com/example/Foo.java");
+        assertEquals(1, result.size());
+        assertEquals(new File("src/main/java/com/example/Foo.java"), result.iterator().next());
+    }
+
+    @Test
+    public void parseNameStatusLineAddedJavaFileTest() {
+        Set<File> result = parseNameStatusLine("A\tsrc/main/java/com/example/Bar.java");
+        assertEquals(1, result.size());
+        assertEquals(new File("src/main/java/com/example/Bar.java"), result.iterator().next());
+    }
+
+    @Test
+    public void parseNameStatusLineDeletedJavaFileIsSkippedTest() {
+        Set<File> result = parseNameStatusLine("D\tsrc/main/java/com/example/Deleted.java");
+        assertTrue(result.isEmpty(), "Deleted files should be excluded");
+    }
+
+    @Test
+    public void parseNameStatusLineRenamedJavaFileUsesNewNameTest() {
+        Set<File> result = parseNameStatusLine("R100\told/path/OldName.java\tnew/path/NewName.java");
+        assertEquals(1, result.size());
+        assertEquals(new File("new/path/NewName.java"), result.iterator().next());
+    }
+
+    @Test
+    public void parseNameStatusLineNonJavaFileIsSkippedTest() {
+        Set<File> xmlResult = parseNameStatusLine("M\tsrc/main/resources/application.xml");
+        assertTrue(xmlResult.isEmpty(), "XML files should be excluded");
+
+        Set<File> mdResult = parseNameStatusLine("A\tREADME.md");
+        assertTrue(mdResult.isEmpty(), "Markdown files should be excluded");
+
+        Set<File> propsResult = parseNameStatusLine("M\tsrc/main/resources/app.properties");
+        assertTrue(propsResult.isEmpty(), "Properties files should be excluded");
+    }
+
+    @Test
+    public void parseNameStatusLineRenamedNonJavaFileIsSkippedTest() {
+        Set<File> result = parseNameStatusLine("R95\told/README.md\tnew/README.md");
+        assertTrue(result.isEmpty(), "Renamed non-Java files should be excluded");
+    }
 }
