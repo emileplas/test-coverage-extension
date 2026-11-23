@@ -36,9 +36,9 @@ test-coverage-extension/          # Parent POM (packaging: pom)
 ## Build & test
 
 ```bash
-mvn clean install           # Build all modules + run tests
-mvn test -pl core -am       # Run only core tests (-am builds single-module-example, whose jacoco.exec the core tests read)
-mvn test -pl maven-plugin   # Run only plugin tests
+./mvnw clean install         # Build all modules + run tests (the wrapper pins Maven 3.9.9)
+./mvnw test -pl core -am     # Run only core tests (-am builds single-module-example, whose jacoco.exec the core tests read)
+./mvnw test -pl maven-plugin # Run only plugin tests
 ```
 
 Tests use JUnit 5 + Mockito. The `single-module-example` module provides test fixtures (compiled classes + jacoco.exec) for integration tests.
