@@ -5,8 +5,8 @@
 **test-coverage-extension** is a Maven plugin (published to Maven Central) that enforces test coverage on changed lines using JaCoCo + git diff. It compares your branch against a base branch and validates coverage rules on the changed code.
 
 - **Group ID**: `tech.linebyline`
-- **Current version**: `1.0.3`
-- **Java**: 17 (SDKMAN managed)
+- **Current version**: `1.1.0`
+- **Java**: compiled for 11 (`maven.compiler.release`), built and tested on 11, 17 and 21
 - **Repo**: https://github.com/emileplas/test-coverage-extension
 
 ## Module structure
@@ -36,9 +36,9 @@ test-coverage-extension/          # Parent POM (packaging: pom)
 ## Build & test
 
 ```bash
-mvn clean install           # Build all modules + run tests
-mvn test -pl core           # Run only core tests
-mvn test -pl maven-plugin   # Run only plugin tests
+./mvnw clean install         # Build all modules + run tests (the wrapper pins Maven 3.9.9)
+./mvnw test -pl core -am     # Run only core tests (-am builds single-module-example, whose jacoco.exec the core tests read)
+./mvnw test -pl maven-plugin # Run only plugin tests
 ```
 
 Tests use JUnit 5 + Mockito. The `single-module-example` module provides test fixtures (compiled classes + jacoco.exec) for integration tests.

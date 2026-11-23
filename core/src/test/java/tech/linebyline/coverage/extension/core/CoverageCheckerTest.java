@@ -9,6 +9,7 @@ import tech.linebyline.coverage.extension.core.model.Rule;
 import tech.linebyline.coverage.extension.core.model.RuleValidationResult;
 import tech.linebyline.coverage.extension.core.services.RuleManager;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -20,14 +21,17 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static tech.linebyline.coverage.extension.core.CoverageChecker.calculateCoverage;
 
-//FIXME: it seems that when we update the project, the tests fails. We need copy the new jacoco.exec to resources and use that one
-//      We should find a better way of mocking this.
 public class CoverageCheckerTest {
+
+    @BeforeAll
+    static void requireCoverageRecording() {
+        ExampleModuleFixture.requireCoverageRecording();
+    }
 
     private ConfigurationManager getConfigurationManager(){
         ConfigurationManager configurationManager = new ConfigurationManager();
         configurationManager.setBranchToCompare("origin/empty-branch");
-        configurationManager.setJacocoExecFile(new File("src/test/resources/jacoco-examples-exec/jacoco.exec"));
+        configurationManager.setJacocoExecFile(ExampleModuleFixture.JACOCO_EXEC);
         configurationManager.setProjectBaseDir(new File("../single-module-example/"));
         configurationManager.setClassPath(new File("../single-module-example/target/classes"));
         configurationManager.setSourcePaths(new String[]{"src/main/java"});

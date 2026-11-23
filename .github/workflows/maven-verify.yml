@@ -5,16 +5,20 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        java: ['11', '17', '21']
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Fetch all branches
         run: git fetch origin empty-branch:refs/remotes/origin/empty-branch
-      - name: Set up JDK 17
+      - name: Set up JDK ${{ matrix.java }}
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: ${{ matrix.java }}
           distribution: 'temurin'
           cache: maven
       - name: Import GPG key
@@ -22,5 +26,7 @@ jobs:
         with:
           gpg_private_key: ${{ secrets.GPG_SIGN_KEY }}
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
+      - name: Check no SNAPSHOT versions
+        uses: ./.github/actions/check-no-snapshots
       - name: Run the Maven verify phase
-        run: mvn --batch-mode --update-snapshots verify
+        run: ./mvnw --batch-mode --update-snapshots verify

@@ -6,7 +6,7 @@
 
     <groupId>tech.linebyline</groupId>
     <artifactId>test-coverage-extension</artifactId>
-    <version>1.0.3</version>
+    <version>1.1.0</version>
     <packaging>pom</packaging>
 
     <name>test-coverage-extension</name>
@@ -21,14 +21,13 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.release>11</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!--shared versions-->
         <junit.version>5.12.0</junit.version>
-        <parent.version>1.0.3</parent.version>
-        <core.version>1.0.3</core.version>
-        <plugin.version>1.0.3</plugin.version>
+        <parent.version>1.1.0</parent.version>
+        <core.version>1.1.0</core.version>
+        <plugin.version>1.1.0</plugin.version>
     </properties>
 
     <scm>
@@ -66,6 +65,27 @@
         </pluginManagement>
 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>require-maven-3.9</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>[3.9,)</version>
+                                    <message>This build needs Maven 3.9 or newer. Use ./mvnw, which downloads the pinned Maven version.</message>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>

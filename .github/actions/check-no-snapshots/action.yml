@@ -1,0 +1,13 @@
+name: 'Check no SNAPSHOT versions'
+description: 'Fails if any pom.xml contains a SNAPSHOT version'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Check for SNAPSHOT versions
+      shell: bash
+      run: |
+        if grep -r "SNAPSHOT" --include="pom.xml" .; then
+          echo "::error::SNAPSHOT versions found in pom.xml files. Release builds must not contain SNAPSHOT versions."
+          exit 1
+        fi
