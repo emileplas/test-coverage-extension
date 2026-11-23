@@ -1,8 +1,10 @@
 package tech.linebyline.coverage.extension.core.integration;
 
+import tech.linebyline.coverage.extension.core.ExampleModuleFixture;
 import tech.linebyline.coverage.extension.core.util.FileUtil;
 import tech.linebyline.coverage.extension.core.model.CodeCoverage;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -19,7 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JaCoCoInteractorTest {
 
-    private static File singleModuleFile = new File("src/test/resources/jacoco-examples-exec/jacoco.exec");
+    private static File singleModuleFile = ExampleModuleFixture.JACOCO_EXEC;
+
+    @BeforeAll
+    static void requireCoverageRecording() {
+        ExampleModuleFixture.requireCoverageRecording();
+    }
 
     File classPathDir = new File("../single-module-example/target/classes");
 
