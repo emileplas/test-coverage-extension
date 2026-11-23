@@ -9,6 +9,7 @@ import tech.linebyline.coverage.extension.core.model.Rule;
 import tech.linebyline.coverage.extension.core.model.RuleValidationResult;
 import tech.linebyline.coverage.extension.core.services.RuleManager;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -22,10 +23,15 @@ import static tech.linebyline.coverage.extension.core.CoverageChecker.calculateC
 
 public class CoverageCheckerTest {
 
+    @BeforeAll
+    static void requireCoverageRecording() {
+        ExampleModuleFixture.requireCoverageRecording();
+    }
+
     private ConfigurationManager getConfigurationManager(){
         ConfigurationManager configurationManager = new ConfigurationManager();
         configurationManager.setBranchToCompare("origin/empty-branch");
-        configurationManager.setJacocoExecFile(new File("../single-module-example/target/jacoco.exec"));
+        configurationManager.setJacocoExecFile(ExampleModuleFixture.JACOCO_EXEC);
         configurationManager.setProjectBaseDir(new File("../single-module-example/"));
         configurationManager.setClassPath(new File("../single-module-example/target/classes"));
         configurationManager.setSourcePaths(new String[]{"src/main/java"});

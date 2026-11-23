@@ -37,7 +37,7 @@ test-coverage-extension/          # Parent POM (packaging: pom)
 
 ```bash
 mvn clean install           # Build all modules + run tests
-mvn test -pl core           # Run only core tests
+mvn test -pl core -am       # Run only core tests (-am builds single-module-example, whose jacoco.exec the core tests read)
 mvn test -pl maven-plugin   # Run only plugin tests
 ```
 
