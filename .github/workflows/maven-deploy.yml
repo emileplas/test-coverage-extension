@@ -36,4 +36,4 @@ jobs:
       - name: Check no SNAPSHOT versions
         uses: ./.github/actions/check-no-snapshots
       - name: Deploy
-        run: mvn deploy
+        run: ./mvnw deploy

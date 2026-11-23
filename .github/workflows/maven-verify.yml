@@ -29,4 +29,4 @@ jobs:
       - name: Check no SNAPSHOT versions
         uses: ./.github/actions/check-no-snapshots
       - name: Run the Maven verify phase
-        run: mvn --batch-mode --update-snapshots verify
+        run: ./mvnw --batch-mode --update-snapshots verify
