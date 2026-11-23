@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JaCoCoInteractorTest {
 
-    private static File singleModuleFile = new File("src/test/resources/jacoco-examples-exec/jacoco.exec");
+    private static File singleModuleFile = new File("../single-module-example/target/jacoco.exec");
 
     File classPathDir = new File("../single-module-example/target/classes");
 
