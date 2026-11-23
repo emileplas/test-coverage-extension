@@ -6,7 +6,7 @@
     <parent>
         <groupId>tech.linebyline</groupId>
         <artifactId>test-coverage-extension</artifactId>
-        <version>1.0.3</version>
+        <version>1.1.0</version>
     </parent>
 
     <groupId>com.brabel</groupId>
